@@ -1,7 +1,7 @@
 package com.example.utils.validate
 
-import com.example.utils.Response
-import com.example.utils.SUCCESS
+import com.example.domain.response.AuthResponse
+import com.example.utils.*
 import io.ktor.http.*
 import java.util.regex.Pattern
 
@@ -17,21 +17,21 @@ class ValidateEmail {
                     ")+"
         )
 
-    fun execute(email: String): Response<Any> {
+    fun execute(email: String): AuthResponse {
         val matches = emailAddressPattern.matcher(email).matches()
         if (email.isEmpty()) {
-            return Response.ErrorResponse(
-                message = "The email can't be empty",
-                statusCode = HttpStatusCode.BadRequest
+            return AuthResponse(
+                status = ERROR,
+                message = EMAIL_EMPTY,
             )
         }
 
         if (!matches) {
-            return Response.ErrorResponse(
-                message = "That's not a valid email",
-                statusCode = HttpStatusCode.BadRequest
+            return AuthResponse(
+                status = ERROR,
+                message = EMAIL_VALID,
             )
         }
-        return Response.SuccessResponse(message = SUCCESS, statusCode = HttpStatusCode.OK)
+        return AuthResponse(status = OK,message = SUCCESS)
     }
 }

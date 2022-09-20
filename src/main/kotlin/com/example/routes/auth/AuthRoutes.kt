@@ -6,67 +6,49 @@ import com.example.domain.model.NewUser
 import com.example.domain.model.UserDto
 import com.example.domain.model.UserCredentials
 import com.example.domain.response.AuthResponse
-import com.example.domain.response.ErrorResponse
 import com.example.domain.response.UserResponse
 import com.example.repository.auth.AuthRepository
-import com.example.security.JwtTokenService
-import com.example.security.TokenConfig
-import com.example.utils.MESSAGE_EMAIL_ALREADY_REGISTERED
-import com.example.utils.Response
-import com.example.utils.SUCCESS
+import com.example.security.JwtService
+import com.example.utils.*
 import com.example.utils.validate.ValidateEmail
 import com.example.utils.validate.ValidatePassword
-import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
-import io.ktor.server.plugins.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.authRoutes(tokenProviderService: JwtTokenService, tokenConfig: TokenConfig) {
+fun Route.authRoutes() {
     val repository = RepositoryProvider.provideAuthRepository()
     route("/auth") {
-        signUp(tokenProviderService, tokenConfig, repository)
-        signIn(tokenProviderService, tokenConfig, repository)
+        signUp(repository)
+        signIn(repository)
         getSecretInfo()
     }
 }
 
-private fun Route.signUp(tokenProviderService: JwtTokenService, tokenConfig: TokenConfig, repository: AuthRepository) {
+private fun Route.signUp(repository: AuthRepository) {
     post("/signup") {
         val request = call.receive<NewUser>()
 
         val validateEmail = ValidateEmail().execute(request.email)
         val validatePassword = ValidatePassword().execute(request.password)
 
-        if (validateEmail is Response.ErrorResponse) {
-            call.respond(
-                validateEmail.statusCode,
-                AuthResponse(
-                    status = "error",
-                    message = validateEmail.message,
-                )
-            )
+        if (validateEmail.status == ERROR) {
+            call.respond(HttpStatusCode.BadRequest, validateEmail)
             return@post
         }
-        if (validatePassword is Response.ErrorResponse) {
-            call.respond(
-                validatePassword.statusCode,
-                AuthResponse(
-                    status = "error",
-                    message = validatePassword.message,
-                )
-            )
+        if (validatePassword.status == ERROR) {
+            call.respond(HttpStatusCode.BadRequest, validatePassword)
             return@post
         }
         if (repository.findUserByEmail(request.email) != null) {
             call.respond(
-                HttpStatusCode.OK,
+                HttpStatusCode.Forbidden,
                 AuthResponse(
-                    status = "error",
+                    status = ERROR,
                     message = MESSAGE_EMAIL_ALREADY_REGISTERED,
                 )
             )
@@ -74,10 +56,10 @@ private fun Route.signUp(tokenProviderService: JwtTokenService, tokenConfig: Tok
         }
         when (val result = repository.signUp(request)) {
             is Response.SuccessResponse -> {
-                val createToken = tokenProviderService.generateAccessToken(config = tokenConfig, result.data as UserDto)
+                val createToken = JwtService.generateAccessToken(result.data as UserDto)
                 call.respond(
                     result.statusCode, AuthResponse(
-                        status = "ok",
+                        status = OK,
                         message = result.message,
                         accessToken = createToken
                     )
@@ -87,7 +69,7 @@ private fun Route.signUp(tokenProviderService: JwtTokenService, tokenConfig: Tok
             is Response.ErrorResponse -> {
                 call.respond(
                     result.statusCode, AuthResponse(
-                        status = "error",
+                        status = ERROR,
                         message = result.message,
                     )
                 )
@@ -96,16 +78,16 @@ private fun Route.signUp(tokenProviderService: JwtTokenService, tokenConfig: Tok
     }
 }
 
-private fun Route.signIn(tokenProviderService: JwtTokenService, tokenConfig: TokenConfig, repository: AuthRepository) {
+private fun Route.signIn(repository: AuthRepository) {
     post("/signin") {
         val request = call.receive<UserCredentials>()
 
         when (val result = repository.signIn(request)) {
             is Response.SuccessResponse -> {
-                val createToken = tokenProviderService.generateAccessToken(config = tokenConfig, result.data as UserDto)
+                val createToken = JwtService.generateAccessToken(result.data as UserDto)
                 call.respond(
                     result.statusCode, AuthResponse(
-                        status = "ok",
+                        status = OK,
                         message = result.message,
                         accessToken = createToken
                     )
@@ -115,7 +97,7 @@ private fun Route.signIn(tokenProviderService: JwtTokenService, tokenConfig: Tok
             is Response.ErrorResponse -> {
                 call.respond(
                     result.statusCode, AuthResponse(
-                        status = "error",
+                        status = ERROR,
                         message = result.message,
                     )
                 )
@@ -127,7 +109,7 @@ private fun Route.signIn(tokenProviderService: JwtTokenService, tokenConfig: Tok
 
 
 private fun Route.getSecretInfo() {
-    authenticate() {
+    authenticate("auth-customer") {
         get("/user") {
             val principal = call.principal<JWTPrincipal>()
             val repository = RepositoryProvider.provideAuthRepository()
@@ -137,7 +119,7 @@ private fun Route.getSecretInfo() {
                     val mapper = UserBodyMapper.mapTo(result.data as UserDto)
                     call.respond(
                         result.statusCode, UserResponse(
-                            status = "ok",
+                            status = OK,
                             message = result.message,
                             user = mapper
                         )
@@ -147,7 +129,7 @@ private fun Route.getSecretInfo() {
                 is Response.ErrorResponse -> {
                     call.respond(
                         result.statusCode, UserResponse(
-                            status = "error",
+                            status = ERROR,
                             message = result.message,
                         )
                     )

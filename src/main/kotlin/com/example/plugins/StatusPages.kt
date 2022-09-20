@@ -2,12 +2,10 @@ package com.example.plugins
 
 
 import com.example.domain.response.ErrorResponse
+import com.example.utils.ERROR
 import com.fasterxml.jackson.core.JsonParseException
-import com.fasterxml.jackson.databind.exc.MismatchedInputException
-import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.plugins.*
 import io.ktor.server.plugins.requestvalidation.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
@@ -38,7 +36,7 @@ fun Application.configureStatusPage() {
             call.respond(
                 HttpStatusCode.BadRequest,
                 ErrorResponse(
-                    status = "error",
+                    status = ERROR,
                     message = cause.message.toString(),
                     code = HttpStatusCode.BadRequest.description,
                 )

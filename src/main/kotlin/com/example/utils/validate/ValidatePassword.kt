@@ -1,25 +1,25 @@
 package com.example.utils.validate
 
-import com.example.utils.Response
-import com.example.utils.SUCCESS
+import com.example.domain.response.AuthResponse
+import com.example.utils.*
 import io.ktor.http.*
 
 class ValidatePassword {
 
-    fun execute(password: String): Response<Any> {
+    fun execute(password: String): AuthResponse {
         if (password.length <= 6) {
-            return Response.ErrorResponse(
-                message = "The password needs to consist of at least 8 characters",
-                statusCode = HttpStatusCode.BadRequest
+            return AuthResponse(
+                status = ERROR,
+                message = PASSWORD_SHORT,
             )
         }
         val containsLettersAndDigits = password.any { it.isDigit() } && password.any { it.isLetter() }
         if (!containsLettersAndDigits) {
-            return Response.ErrorResponse(
-                message = "The password needs to contain at least one letter and digit",
-                statusCode = HttpStatusCode.BadRequest
+            return AuthResponse(
+                status = ERROR,
+                message = PASSWORD_LETTER,
             )
         }
-        return Response.SuccessResponse(message = SUCCESS, statusCode = HttpStatusCode.OK)
+        return AuthResponse(status = OK, message = SUCCESS)
     }
 }

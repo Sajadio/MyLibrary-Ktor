@@ -49,7 +49,7 @@ class AuthRepositoryImpl(private val authService: AuthService) : AuthRepository 
             authService.findUserById(id)?.let { user ->
                 Response.SuccessResponse(
                     message = SUCCESS,
-                    statusCode = HttpStatusCode.Found,
+                    statusCode = HttpStatusCode.OK,
                     data = user
                 )
             } ?: Response.ErrorResponse(
