@@ -1,13 +1,13 @@
 package com.example.routes.auth
 
 import com.example.data.mapper.implement.UserBodyMapper
-import com.example.di.RepositoryProvider
 import com.example.domain.model.NewUser
 import com.example.domain.model.UserDto
 import com.example.domain.model.UserCredentials
 import com.example.domain.response.AuthResponse
 import com.example.domain.response.UserResponse
 import com.example.repository.auth.AuthRepository
+import com.example.repository.auth.AuthRepositoryImpl
 import com.example.security.JwtService
 import com.example.utils.*
 import com.example.utils.validate.ValidateEmail
@@ -19,13 +19,16 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.koin.ktor.ext.inject
+
 
 fun Route.authRoutes() {
-    val repository = RepositoryProvider.provideAuthRepository()
+    val repository by inject<AuthRepository>()
+
     route("/auth") {
         signUp(repository)
         signIn(repository)
-        getSecretInfo()
+        getSecretInfo(repository)
     }
 }
 
@@ -108,12 +111,10 @@ private fun Route.signIn(repository: AuthRepository) {
 }
 
 
-private fun Route.getSecretInfo() {
+private fun Route.getSecretInfo(repository: AuthRepository) {
     authenticate("auth-customer") {
         get("/user") {
             val principal = call.principal<JWTPrincipal>()
-            val repository = RepositoryProvider.provideAuthRepository()
-
             when (val result = repository.findUserById(principal?.getClaim("userId", Int::class)!!)) {
                 is Response.SuccessResponse -> {
                     val mapper = UserBodyMapper.mapTo(result.data as UserDto)

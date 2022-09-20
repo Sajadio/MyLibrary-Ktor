@@ -5,6 +5,7 @@ val exposed_version: String by project
 val postgresql_version: String by project
 val HikariCP_version: String by project
 val commons_version: String by project
+val koin_version: String by project
 
 plugins {
     application
@@ -50,4 +51,6 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-java-time:$exposed_version")
     implementation("org.postgresql:postgresql:$postgresql_version")
     implementation("com.zaxxer:HikariCP:$HikariCP_version")
+
+    implementation("io.insert-koin:koin-ktor:$koin_version")
 }

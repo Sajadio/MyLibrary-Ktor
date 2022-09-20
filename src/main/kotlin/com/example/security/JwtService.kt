@@ -27,7 +27,6 @@ object JwtService {
     private val createdAt = getTimeMillis()
 
     private const val CLAIM_ID = "userId"
-    private const val CLAIM_EMAIL = "email"
 
     private val jwtVerifier: JWTVerifier = JWT
         .require(algorithm)
@@ -41,7 +40,6 @@ object JwtService {
             .withIssuer(issuer)
             .withSubject(subject)
             .withClaim(CLAIM_ID, user.userId)
-            .withClaim(CLAIM_EMAIL, user.email)
             .withExpiresAt(Date(System.currentTimeMillis() + EXPIRY_TIME))
             .sign(algorithm)
         return TokenResponse(createdAt, expiresIn, accessToken)
