@@ -1,10 +1,10 @@
 package com.example.utils.validate
 
-import com.example.domain.response.AuthResponse
+import com.example.utils.response.AuthResponse
 import com.example.utils.*
 import io.ktor.http.*
 
-class ValidatePassword {
+object ValidatePassword {
 
     fun execute(password: String): AuthResponse {
         if (password.length <= 6) {

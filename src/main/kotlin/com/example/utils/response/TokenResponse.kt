@@ -1,4 +1,4 @@
-package com.example.domain.response
+package com.example.utils.response
 
 data class TokenResponse(
     val createdAt: Long,

@@ -1,141 +1,216 @@
 package com.example.routes.auth
 
-import com.example.data.mapper.implement.UserBodyMapper
-import com.example.domain.model.NewUser
-import com.example.domain.model.UserDto
-import com.example.domain.model.UserCredentials
-import com.example.domain.response.AuthResponse
-import com.example.domain.response.UserResponse
+import com.example.domain.model.*
+import com.example.utils.response.AuthResponse
 import com.example.repository.auth.AuthRepository
-import com.example.repository.auth.AuthRepositoryImpl
 import com.example.security.JwtService
+import com.example.security.UserPrincipal
 import com.example.utils.*
 import com.example.utils.validate.ValidateEmail
 import com.example.utils.validate.ValidatePassword
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.auth.*
-import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import org.koin.ktor.ext.inject
 
 
-fun Route.authRoutes() {
-    val repository by inject<AuthRepository>()
-
-    route("/auth") {
-        signUp(repository)
-        signIn(repository)
-        getSecretInfo(repository)
-    }
-}
-
-private fun Route.signUp(repository: AuthRepository) {
+fun Route.signUp(repository: AuthRepository) {
     post("/signup") {
-        val request = call.receive<NewUser>()
+        val authType = call.request.queryParameters["auth-type"]
 
-        val validateEmail = ValidateEmail().execute(request.email)
-        val validatePassword = ValidatePassword().execute(request.password)
+        try {
+            when (authType) {
+                AuthType.ADMIN.name -> {
+                    val request = call.receive<NewAdmin>()
 
-        if (validateEmail.status == ERROR) {
-            call.respond(HttpStatusCode.BadRequest, validateEmail)
-            return@post
-        }
-        if (validatePassword.status == ERROR) {
-            call.respond(HttpStatusCode.BadRequest, validatePassword)
-            return@post
-        }
-        if (repository.findUserByEmail(request.email) != null) {
+                    val validateEmail = ValidateEmail.execute(request.email)
+                    val validatePassword = ValidatePassword.execute(request.password)
+                    if (validateEmail.status == ERROR) {
+                        call.respond(HttpStatusCode.BadRequest, validateEmail)
+                        return@post
+                    }
+                    if (validatePassword.status == ERROR) {
+                        call.respond(HttpStatusCode.BadRequest, validatePassword)
+                        return@post
+                    }
+
+                    if (repository.findAdminByEmail(request.email) != null) {
+                        call.respond(
+                            HttpStatusCode.Forbidden,
+                            AuthResponse(
+                                status = ERROR,
+                                message = MESSAGE_EMAIL_ALREADY_REGISTERED,
+                            )
+                        )
+                        return@post
+                    }
+
+                    when (val result = repository.adminSignUp(request)) {
+                        is Response.SuccessResponse -> {
+                            val adminDto = result.data as AdminDto
+                            val userPrincipal = UserPrincipal(
+                                id = adminDto.adminId.toString(),
+                                email = adminDto.email.toString(),
+                            )
+                            val createToken = JwtService.generateAccessToken(userPrincipal)
+                            call.respond(
+                                result.statusCode, AuthResponse(
+                                    status = OK,
+                                    message = result.message,
+                                    accessToken = createToken
+                                )
+                            )
+                        }
+
+                        is Response.ErrorResponse -> {
+                            call.respond(
+                                result.statusCode, AuthResponse(
+                                    status = ERROR,
+                                    message = result.message,
+                                )
+                            )
+                        }
+                    }
+
+                }
+
+                AuthType.USER.name -> {
+                    val request = call.receive<NewUser>()
+                    val validateEmail = ValidateEmail.execute(request.email)
+                    val validatePassword = ValidatePassword.execute(request.password)
+                    if (validateEmail.status == ERROR) {
+                        call.respond(HttpStatusCode.BadRequest, validateEmail)
+                        return@post
+                    }
+                    if (validatePassword.status == ERROR) {
+                        call.respond(HttpStatusCode.BadRequest, validatePassword)
+                        return@post
+                    }
+                    if (repository.findUserByEmail(request.email) != null) {
+                        call.respond(
+                            HttpStatusCode.Forbidden,
+                            AuthResponse(
+                                status = ERROR,
+                                message = MESSAGE_EMAIL_ALREADY_REGISTERED,
+                            )
+                        )
+                        return@post
+                    }
+                    when (val result = repository.userSignUp(request)) {
+                        is Response.SuccessResponse -> {
+                            val userDto = result.data as UserDto
+                            val userPrincipal = UserPrincipal(
+                                id = userDto.userId.toString(),
+                                email = userDto.email.toString(),
+                            )
+                            val createToken = JwtService.generateAccessToken(userPrincipal)
+                            call.respond(
+                                result.statusCode, AuthResponse(
+                                    status = OK,
+                                    message = result.message,
+                                    accessToken = createToken
+                                )
+                            )
+                        }
+
+                        is Response.ErrorResponse -> {
+                            call.respond(
+                                result.statusCode, AuthResponse(
+                                    status = ERROR,
+                                    message = result.message,
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+        } catch (e: Exception) {
             call.respond(
-                HttpStatusCode.Forbidden,
-                AuthResponse(
+                HttpStatusCode.BadRequest, AuthResponse(
                     status = ERROR,
-                    message = MESSAGE_EMAIL_ALREADY_REGISTERED,
+                    message = e.message,
                 )
             )
-            return@post
-        }
-        when (val result = repository.signUp(request)) {
-            is Response.SuccessResponse -> {
-                val createToken = JwtService.generateAccessToken(result.data as UserDto)
-                call.respond(
-                    result.statusCode, AuthResponse(
-                        status = OK,
-                        message = result.message,
-                        accessToken = createToken
-                    )
-                )
-            }
-
-            is Response.ErrorResponse -> {
-                call.respond(
-                    result.statusCode, AuthResponse(
-                        status = ERROR,
-                        message = result.message,
-                    )
-                )
-            }
         }
     }
 }
 
-private fun Route.signIn(repository: AuthRepository) {
-    post("/signin") {
-        val request = call.receive<UserCredentials>()
+fun Route.login(repository: AuthRepository) {
+    post("/login") {
+        val authType = call.request.queryParameters["auth-type"]
+        try {
+            when (authType) {
+                AuthType.ADMIN.name -> {
+                    val request = call.receive<AdminCredentials>()
+                    when (val result = repository.adminLogIn(request)) {
 
-        when (val result = repository.signIn(request)) {
-            is Response.SuccessResponse -> {
-                val createToken = JwtService.generateAccessToken(result.data as UserDto)
-                call.respond(
-                    result.statusCode, AuthResponse(
-                        status = OK,
-                        message = result.message,
-                        accessToken = createToken
-                    )
-                )
-            }
+                        is Response.SuccessResponse -> {
+                            val adminDto = result.data as AdminDto
+                            val userPrincipal = UserPrincipal(
+                                id = adminDto.adminId.toString(),
+                                email = adminDto.email.toString(),
+                            )
+                            val createToken = JwtService.generateAccessToken(userPrincipal)
+                            call.respond(
+                                result.statusCode, AuthResponse(
+                                    status = OK,
+                                    message = result.message,
+                                    accessToken = createToken
+                                )
+                            )
+                        }
 
-            is Response.ErrorResponse -> {
-                call.respond(
-                    result.statusCode, AuthResponse(
-                        status = ERROR,
-                        message = result.message,
-                    )
-                )
-            }
-        }
-
-    }
-}
-
-
-private fun Route.getSecretInfo(repository: AuthRepository) {
-    authenticate("auth-customer") {
-        get("/user") {
-            val principal = call.principal<JWTPrincipal>()
-            when (val result = repository.findUserById(principal?.getClaim("userId", Int::class)!!)) {
-                is Response.SuccessResponse -> {
-                    val mapper = UserBodyMapper.mapTo(result.data as UserDto)
-                    call.respond(
-                        result.statusCode, UserResponse(
-                            status = OK,
-                            message = result.message,
-                            user = mapper
-                        )
-                    )
+                        is Response.ErrorResponse -> {
+                            call.respond(
+                                result.statusCode, AuthResponse(
+                                    status = ERROR,
+                                    message = result.message,
+                                )
+                            )
+                        }
+                    }
                 }
 
-                is Response.ErrorResponse -> {
-                    call.respond(
-                        result.statusCode, UserResponse(
-                            status = ERROR,
-                            message = result.message,
-                        )
-                    )
+                AuthType.USER.name -> {
+                    val request = call.receive<UserCredentials>()
+                    when (val result = repository.userLogIn(request)) {
+
+                        is Response.SuccessResponse -> {
+                            val userDto = result.data as UserDto
+                            val userPrincipal = UserPrincipal(
+                                id = userDto.userId.toString(),
+                                email = userDto.email.toString(),
+                            )
+                            val createToken = JwtService.generateAccessToken(userPrincipal)
+                            call.respond(
+                                result.statusCode, AuthResponse(
+                                    status = OK,
+                                    message = result.message,
+                                    accessToken = createToken
+                                )
+                            )
+                        }
+
+                        is Response.ErrorResponse -> {
+                            call.respond(
+                                result.statusCode, AuthResponse(
+                                    status = ERROR,
+                                    message = result.message,
+                                )
+                            )
+                        }
+                    }
                 }
             }
+        } catch (e: Exception) {
+            call.respond(
+                HttpStatusCode.BadRequest, AuthResponse(
+                    status = ERROR,
+                    message = e.message,
+                )
+            )
         }
+
     }
 }

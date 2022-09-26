@@ -1,12 +1,12 @@
 package com.example.utils.validate
 
-import com.example.domain.response.AuthResponse
+import com.example.utils.response.AuthResponse
 import com.example.utils.*
 import io.ktor.http.*
 import java.util.regex.Pattern
 
 
-class ValidateEmail {
+object ValidateEmail {
 
     private val emailAddressPattern: Pattern =
         Pattern.compile(
@@ -32,6 +32,6 @@ class ValidateEmail {
                 message = EMAIL_VALID,
             )
         }
-        return AuthResponse(status = OK,message = SUCCESS)
+        return AuthResponse(status = OK, message = SUCCESS)
     }
 }

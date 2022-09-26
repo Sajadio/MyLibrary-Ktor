@@ -1,6 +1,7 @@
 package com.example.database
 
-import com.example.database.table.user.UserTable
+import com.example.database.table.AdminTable
+import com.example.database.table.UserTable
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import kotlinx.coroutines.Dispatchers
@@ -15,6 +16,7 @@ object DatabaseFactory {
         Database.connect(hikari())
         transaction {
             SchemaUtils.create(UserTable)
+            SchemaUtils.create(AdminTable)
         }
     }
 

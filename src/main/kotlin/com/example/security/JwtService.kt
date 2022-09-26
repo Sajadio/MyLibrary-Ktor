@@ -3,9 +3,8 @@ package com.example.security
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
-import com.example.domain.model.UserDto
-import com.example.domain.response.ErrorResponse
-import com.example.domain.response.TokenResponse
+import com.example.utils.response.ErrorResponse
+import com.example.utils.response.TokenResponse
 import com.example.utils.ERROR
 import com.example.utils.EXPIRY_TIME
 import com.example.utils.INVALID_AUTHENTICATION_TOKEN
@@ -26,7 +25,7 @@ object JwtService {
     private val expiresIn = getTimeMillis() + EXPIRY_TIME
     private val createdAt = getTimeMillis()
 
-    private const val CLAIM_ID = "userId"
+    private const val CLAIM_ID = "id"
 
     private val jwtVerifier: JWTVerifier = JWT
         .require(algorithm)
@@ -34,19 +33,38 @@ object JwtService {
         .withIssuer(issuer)
         .build()
 
-    fun generateAccessToken(user: UserDto): TokenResponse {
+    fun generateAccessToken(userPrincipal: UserPrincipal): TokenResponse {
         val accessToken = JWT.create()
             .withAudience(audience)
             .withIssuer(issuer)
             .withSubject(subject)
-            .withClaim(CLAIM_ID, user.userId)
+            .withClaim(CLAIM_ID, userPrincipal.id)
             .withExpiresAt(Date(System.currentTimeMillis() + EXPIRY_TIME))
             .sign(algorithm)
         return TokenResponse(createdAt, expiresIn, accessToken)
     }
 
-    fun customerAuth(auth: AuthenticationConfig) {
-        auth.jwt("auth-customer") {
+    fun userAuth(auth: AuthenticationConfig) {
+        auth.jwt("auth-user") {
+            verifier(jwtVerifier)
+            validate {
+                checkValidate(it)
+            }
+            challenge { _, _ ->
+                call.respond(
+                    HttpStatusCode.Unauthorized,
+                    ErrorResponse(
+                        status = ERROR,
+                        message = INVALID_AUTHENTICATION_TOKEN,
+                        code = HttpStatusCode.Unauthorized.description,
+                    )
+                )
+            }
+        }
+    }
+
+    fun adminAuth(auth: AuthenticationConfig) {
+        auth.jwt("auth-admin") {
             verifier(jwtVerifier)
             validate {
                 checkValidate(it)
@@ -70,4 +88,8 @@ object JwtService {
             JWTPrincipal(credential.payload)
         } else null
     }
+
+    val JWTPrincipal.userId: String? get() = getClaim(CLAIM_ID, String::class)
+    val JWTPrincipal.adminId: String? get() = getClaim(CLAIM_ID, String::class)
+
 }

@@ -8,7 +8,8 @@ import io.ktor.server.application.*
 fun Application.configureSecurity() {
 
     authentication {
-        JwtService.customerAuth(this)
+        JwtService.userAuth(this)
+        JwtService.adminAuth(this)
         jwt {
             realm = this@configureSecurity.environment.config.property("jwt.realm").getString()
         }
