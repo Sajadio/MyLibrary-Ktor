@@ -3,10 +3,15 @@ package com.example.plugins
 import com.example.di.appModule
 import com.example.repository.admin.AdminRepository
 import com.example.repository.auth.AuthRepository
+import com.example.repository.library.LibraryRepository
 import com.example.repository.user.UserRepository
 import com.example.routes.admin.*
 import com.example.routes.auth.login
 import com.example.routes.auth.signUp
+import com.example.routes.library.addLibrary
+import com.example.routes.library.getAllLibrary
+import com.example.routes.library.getLibrary
+import com.example.routes.library.updateLibraryInfo
 import com.example.routes.user.getUserInfo
 import com.example.routes.user.updateUserInfo
 import com.google.gson.Gson
@@ -31,8 +36,13 @@ fun Application.configureRouting() {
         route("/user") {
             authenticate("auth-user") {
                 val userRepo by inject<UserRepository>()
+                val libraryRepo by inject<LibraryRepository>()
                 getUserInfo(userRepo)
                 updateUserInfo(userRepo, gson)
+                addLibrary(libraryRepo)
+                getLibrary(libraryRepo)
+                getAllLibrary(libraryRepo)
+                updateLibraryInfo(libraryRepo)
             }
         }
 

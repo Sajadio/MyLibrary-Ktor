@@ -1,57 +1,18 @@
 package com.example.routes.user
 
-import com.example.data.mapper.implement.UserBodyMapper
-import com.example.domain.model.UserDto
-import com.example.utils.response.User
-import com.example.utils.response.AdminResponse
 import com.example.repository.user.UserRepository
 import com.example.routes.userId
 import com.example.utils.*
-import com.example.utils.response.UserResponse
+import com.example.utils.response.AdminResponse
+import com.example.utils.response.User
 import com.google.gson.Gson
-import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.request.forms.*
-import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.server.application.*
-import io.ktor.server.auth.*
-import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import java.io.File
-
-
-fun Route.getUserInfo(repository: UserRepository) {
-    get {
-            when (val result = repository.getUserById(call.userId.toInt())) {
-                is Response.SuccessResponse -> {
-                    val userDto = result.data as UserDto
-                    val mapper = UserBodyMapper.mapTo(userDto)
-                    println("pathImage ${mapper.urlPhoto}")
-                    call.respond(
-                        result.statusCode, UserResponse(
-                            status = OK,
-                            message = result.message,
-                            user = mapper
-                        )
-                    )
-                }
-
-                is Response.ErrorResponse -> {
-                    call.respond(
-                        result.statusCode, AdminResponse(
-                            status = ERROR,
-                            message = result.message,
-                        )
-                    )
-                }
-            }
-        }
-    }
-
 
 fun Route.updateUserInfo(repository: UserRepository, gson: Gson) {
     put("/update") {
@@ -101,7 +62,7 @@ fun Route.updateUserInfo(repository: UserRepository, gson: Gson) {
                     }
 
                     is Response.ErrorResponse -> {
-                        File("${PROFILE_PICTURE_PATH}/$fileName").delete()
+                        File("$PROFILE_PICTURE_PATH/$fileName").delete()
                         call.respond(
                             HttpStatusCode.InternalServerError, AdminResponse(
                                 status = ERROR,

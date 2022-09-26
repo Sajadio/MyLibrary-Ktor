@@ -1,12 +1,17 @@
 package com.example.repository.auth
 
 import com.example.domain.model.*
-import com.example.service.auth.AuthService
+import com.example.service.admin.AdminService
+import com.example.service.auth.admin.AdminAuth
+import com.example.service.auth.user.UserAuth
 import com.example.utils.*
 import io.ktor.http.*
 
-class AuthRepositoryImpl(private val authService: AuthService) : AuthRepository {
-    override suspend fun userSignUp(newUser: NewUser) = authService.userSignUp(newUser)?.let { result ->
+class AuthRepositoryImpl(
+    private val adminAuth: AdminAuth,
+    private val userAuth: UserAuth,
+) : AuthRepository {
+    override suspend fun userSignUp(newUser: NewUser) = userAuth.userSignUp(newUser)?.let { result ->
         checkResponseStatus(
             USER_REGISTRATION_SUCCESS,
             HttpStatusCode.OK,
@@ -19,19 +24,20 @@ class AuthRepositoryImpl(private val authService: AuthService) : AuthRepository 
 
 
     override suspend fun userLogIn(userCredentials: UserCredentials) =
-        authService.userLogIn(userCredentials)?.let { result ->
+        userAuth.userLogIn(userCredentials)?.let { result ->
             checkResponseStatus(
                 USER_LOGIN_SUCCESS,
                 HttpStatusCode.OK,
                 result
             )
         } ?: checkResponseStatus(
-            message = USER_LOGIN_FAILURE,
+            message = LOGIN_FAILURE,
             statusCode = HttpStatusCode.BadRequest
         )
 
-    override suspend fun findUserByEmail(email: String) = authService.findUserByEmail(email)
-    override suspend fun adminSignUp(newAdmin: NewAdmin) = authService.adminSignUp(newAdmin)?.let { result ->
+    override suspend fun findUserByEmail(email: String) = userAuth.findUserByEmail(email)
+
+    override suspend fun adminSignUp(newAdmin: NewAdmin) = adminAuth.adminSignUp(newAdmin)?.let { result ->
         checkResponseStatus(
             ADMIN_REGISTRATION_SUCCESS,
             HttpStatusCode.OK,
@@ -43,7 +49,7 @@ class AuthRepositoryImpl(private val authService: AuthService) : AuthRepository 
     )
 
     override suspend fun adminLogIn(adminCredentials: AdminCredentials) =
-        authService.adminLogIn(adminCredentials)?.let { result ->
+        adminAuth.adminLogIn(adminCredentials)?.let { result ->
             checkResponseStatus(
                 ADMIN_LOGIN_SUCCESS,
                 HttpStatusCode.OK,
@@ -54,6 +60,6 @@ class AuthRepositoryImpl(private val authService: AuthService) : AuthRepository 
             statusCode = HttpStatusCode.BadRequest
         )
 
-    override suspend fun findAdminByEmail(email: String)= authService.findAdminByEmail(email)
+    override suspend fun findAdminByEmail(email: String) = adminAuth.findAdminByEmail(email)
 
 }
