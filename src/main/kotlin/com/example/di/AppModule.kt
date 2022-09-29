@@ -4,6 +4,8 @@ import com.example.repository.admin.AdminRepository
 import com.example.repository.admin.AdminRepositoryImpl
 import com.example.repository.auth.AuthRepository
 import com.example.repository.auth.AuthRepositoryImpl
+import com.example.repository.book.BookRepository
+import com.example.repository.book.BookRepositoryImpl
 import com.example.repository.library.LibraryRepository
 import com.example.repository.library.LibraryRepositoryImpl
 import com.example.repository.user.UserRepository
@@ -14,6 +16,8 @@ import com.example.service.auth.admin.AdminAuth
 import com.example.service.auth.admin.AdminAuthImpl
 import com.example.service.auth.user.UserAuth
 import com.example.service.auth.user.UserAuthImpl
+import com.example.service.book.BookService
+import com.example.service.book.BookServiceImpl
 import com.example.service.library.LibraryService
 import com.example.service.library.LibraryServiceImpl
 import com.example.service.user.UserService
@@ -38,14 +42,12 @@ val appModule = module {
     single<UserRepository> {
         UserRepositoryImpl(get())
     }
-
     single<AdminService> {
         AdminServiceImpl()
     }
     single<AdminRepository> {
         AdminRepositoryImpl(get())
     }
-
     single<LibraryService> {
         LibraryServiceImpl()
     }
@@ -54,5 +56,10 @@ val appModule = module {
     }
     single { Gson() }
 
-
+    single<BookService> {
+        BookServiceImpl()
+    }
+    single<BookRepository> {
+        BookRepositoryImpl(get())
+    }
 }

@@ -7,7 +7,9 @@ import com.example.domain.response.LibraryResponse
 import com.example.repository.admin.AdminRepository
 import com.example.repository.library.LibraryRepository
 import com.example.repository.user.UserRepository
+import com.example.routes.adminId
 import com.example.utils.ERROR
+import com.example.utils.INVALID_AUTHENTICATION_TOKEN
 import com.example.utils.OK
 import com.example.utils.Response
 import io.ktor.http.*
@@ -22,6 +24,17 @@ fun Route.acceptLibrary(
 ) {
     put("library/accept") {
         try {
+
+            if (call.adminId.isEmpty()) {
+                call.respond(
+                    HttpStatusCode.BadRequest, LibraryResponse(
+                        status = ERROR,
+                        message = INVALID_AUTHENTICATION_TOKEN
+                    )
+                )
+                return@put
+            }
+
             val libraryId = call.request.queryParameters["libraryId"]?.toIntOrNull()
             libraryId?.let {
                 when (val result = adminRepo.acceptLibrary(libraryId)) {

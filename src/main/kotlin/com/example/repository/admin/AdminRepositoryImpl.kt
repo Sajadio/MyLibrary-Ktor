@@ -18,7 +18,6 @@ class AdminRepositoryImpl(
         message = MESSAGE_ADMIN_ID,
         statusCode = HttpStatusCode.NotFound
     )
-
     override suspend fun updateAdminInfo(admin: Admin, adminId: Int) =
         adminService.updateAdminInfo(admin, adminId).takeIf { it }?.run {
             checkResponseStatus(
@@ -30,7 +29,6 @@ class AdminRepositoryImpl(
             message = GENERIC_ERROR,
             statusCode = HttpStatusCode.NotFound
         )
-
     override suspend fun getAllUsers(): Response<Any> {
         val users = adminService.getAllUsers()
         return if (users.isNotEmpty()) {
@@ -44,7 +42,6 @@ class AdminRepositoryImpl(
             statusCode = HttpStatusCode.NotFound
         )
     }
-
     override suspend fun getUserById(userId: Int) = adminService.getUserById(userId)?.let { user ->
         checkResponseStatus(
             SUCCESS,
@@ -55,8 +52,7 @@ class AdminRepositoryImpl(
         message = MESSAGE_USER_ID,
         statusCode = HttpStatusCode.NotFound
     )
-
-    override suspend fun findUserByEmail(email: String) = adminService.findUserByEmail(email)?.let { user ->
+    override suspend fun getUserByEmail(email: String) = adminService.getUserByEmail(email)?.let { user ->
         checkResponseStatus(
             SUCCESS,
             HttpStatusCode.OK,
@@ -66,7 +62,6 @@ class AdminRepositoryImpl(
         message = MESSAGE_USER_ID,
         statusCode = HttpStatusCode.NotFound
     )
-
     override suspend fun deleteAllUsers() = if (adminService.deleteAllUsers())
         checkResponseStatus(
             SUCCESS,
@@ -74,9 +69,8 @@ class AdminRepositoryImpl(
         ) else
         checkResponseStatus(
             message = GENERIC_ERROR,
-            statusCode = HttpStatusCode.NotFound
+            statusCode = HttpStatusCode.BadRequest
         )
-
     override suspend fun deleteUserById(userId: Int) = if (adminService.deleteUserById(userId))
         checkResponseStatus(
             SUCCESS,
@@ -84,9 +78,17 @@ class AdminRepositoryImpl(
         ) else
         checkResponseStatus(
             message = MESSAGE_USER_ID,
-            statusCode = HttpStatusCode.NotFound
+            statusCode = HttpStatusCode.BadRequest
         )
-
+    override suspend fun deleteLibraryById(libraryId: Int) = if (adminService.deleteUserById(libraryId))
+        checkResponseStatus(
+            SUCCESS,
+            HttpStatusCode.OK
+        ) else
+        checkResponseStatus(
+            message = MESSAGE_USER_ID,
+            statusCode = HttpStatusCode.BadRequest
+        )
     override suspend fun getAllLibrariesNotAccepted(): Response<Any> {
         val libraries = adminService.getAllLibrariesNotAccepted()
         return if (libraries.isNotEmpty()) {
@@ -96,11 +98,19 @@ class AdminRepositoryImpl(
                 libraries
             )
         } else checkResponseStatus(
-            message = GENERIC_ERROR,
+            message = EMPTY_RESULT,
             statusCode = HttpStatusCode.NotFound
         )
     }
-
+    override suspend fun deleteAllLibraries() = if (adminService.deleteAllLibraries())
+        checkResponseStatus(
+            message = SUCCESS,
+            statusCode = HttpStatusCode.OK
+        )
+    else checkResponseStatus(
+        message = GENERIC_ERROR,
+        statusCode = HttpStatusCode.BadRequest
+    )
     override suspend fun acceptLibrary(libraryId: Int) = if (adminService.acceptLibrary(libraryId))
         checkResponseStatus(
             ACCEPT_LIBRARY,
@@ -111,7 +121,6 @@ class AdminRepositoryImpl(
             message = GENERIC_ERROR,
             statusCode = HttpStatusCode.NotFound
         )
-
     override suspend fun rejectLibrary(libraryId: Int) =
         if (adminService.rejectLibrary(libraryId))
             checkResponseStatus(

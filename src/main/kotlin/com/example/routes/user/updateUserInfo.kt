@@ -20,7 +20,6 @@ fun Route.updateUserInfo(repository: UserRepository, gson: Gson) {
         val multipart = call.receiveMultipart()
         var fileName: String? = null
         try {
-
             multipart.forEachPart { partData ->
                 when (partData) {
                     is PartData.FormItem -> {

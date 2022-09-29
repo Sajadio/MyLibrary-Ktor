@@ -1,11 +1,10 @@
 package com.example.routes.admin
 
-import com.example.domain.response.AdminResponse
+import com.example.domain.response.BookResponse
 import com.example.domain.response.LibraryResponse
 import com.example.repository.admin.AdminRepository
-import com.example.utils.ERROR
-import com.example.utils.OK
-import com.example.utils.Response
+import com.example.routes.*
+import com.example.utils.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
@@ -15,6 +14,15 @@ fun Route.rejectLibrary(repository: AdminRepository) {
     put("library/reject") {
         try {
             val libraryId = call.request.queryParameters["libraryId"]?.toIntOrNull()
+            if (call.adminId.isEmpty()) {
+                call.respond(
+                    HttpStatusCode.BadRequest, BookResponse(
+                        status = ERROR,
+                        message = INVALID_AUTHENTICATION_TOKEN
+                    )
+                )
+                return@put
+            }
             libraryId?.let {
                 when (val result = repository.rejectLibrary(libraryId)) {
                     is Response.SuccessResponse -> {
@@ -28,7 +36,7 @@ fun Route.rejectLibrary(repository: AdminRepository) {
 
                     is Response.ErrorResponse -> {
                         call.respond(
-                           result.statusCode, LibraryResponse(
+                            result.statusCode, LibraryResponse(
                                 status = ERROR,
                                 message = result.message,
                             )
@@ -44,7 +52,7 @@ fun Route.rejectLibrary(repository: AdminRepository) {
 
         } catch (e: Exception) {
             call.respond(
-                HttpStatusCode.BadRequest, AdminResponse(
+                HttpStatusCode.BadRequest, LibraryResponse(
                     status = ERROR,
                     message = e.message
                 )

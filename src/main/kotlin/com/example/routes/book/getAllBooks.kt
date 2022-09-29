@@ -1,35 +1,33 @@
-package com.example.routes.library
+package com.example.routes.book
 
-import com.example.data.mapper.implement.LibrariesBodyMapper
-import com.example.domain.model.LibraryDto
-import com.example.repository.library.LibraryRepository
-import com.example.utils.ERROR
-import com.example.utils.OK
-import com.example.utils.Response
-import com.example.domain.response.LibrariesResponse
+import com.example.data.mapper.implement.BooksBodyMapper
+import com.example.domain.model.BookDto
+import com.example.domain.response.BooksResponse
+import com.example.repository.book.BookRepository
+import com.example.utils.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.getAllLibrary(repository: LibraryRepository) {
-    get("libraries") {
+fun Route.getAllBooks(repository: BookRepository) {
+    get("books") {
         try {
-            when (val result = repository.getAllLibrary()) {
+            when (val result = repository.getAllBooks()) {
                 is Response.SuccessResponse -> {
-                    val mapper = LibrariesBodyMapper.mapTo(result.data as List<LibraryDto>)
+                    val mapper = BooksBodyMapper.mapTo(result.data as List<BookDto>)
                     call.respond(
-                        result.statusCode, LibrariesResponse(
+                        result.statusCode, BooksResponse(
                             status = OK,
                             message = result.message,
-                            libraries = mapper
+                            books = mapper
                         )
                     )
                 }
 
                 is Response.ErrorResponse -> {
                     call.respond(
-                        result.statusCode, LibrariesResponse(
+                        result.statusCode, BooksResponse(
                             status = ERROR,
                             message = result.message,
                         )
@@ -39,7 +37,7 @@ fun Route.getAllLibrary(repository: LibraryRepository) {
 
         } catch (e: Exception) {
             call.respond(
-                HttpStatusCode.BadRequest, LibrariesResponse(
+                HttpStatusCode.BadRequest, BooksResponse(
                     status = ERROR,
                     message = e.message
                 )

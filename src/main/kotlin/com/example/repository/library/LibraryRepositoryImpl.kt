@@ -16,19 +16,7 @@ class LibraryRepositoryImpl(
             )
         else checkResponseStatus(
             message = GENERIC_ERROR,
-            statusCode = HttpStatusCode.NotFound
-        )
-
-
-    override suspend fun deleteLibrary(libraryId: Int) =
-        if (libraryService.deleteLibrary(libraryId))
-            checkResponseStatus(
-                message = SUCCESS,
-                statusCode = HttpStatusCode.OK
-            )
-        else checkResponseStatus(
-            message = GENERIC_ERROR,
-            statusCode = HttpStatusCode.NotFound
+            statusCode = HttpStatusCode.BadRequest
         )
 
     override suspend fun getLibraryById(libraryId: Int) = libraryService.getLibraryById(libraryId)?.let { library ->
@@ -38,34 +26,45 @@ class LibraryRepositoryImpl(
             data = library
         )
     } ?: checkResponseStatus(
-        message = MESSAGE_LIBRARY_NAME,
-        statusCode = HttpStatusCode.NotFound
+        message = EMPTY_RESULT,
+        statusCode = HttpStatusCode.OK
     )
 
     override suspend fun getAllLibrary(): Response<Any> {
         val libraries = libraryService.getAllLibrary()
-        return if (libraries.isNotEmpty()) {
+        return if (libraries.isNotEmpty())
             checkResponseStatus(
-                SUCCESS,
-                HttpStatusCode.OK,
-                libraries
+                message = SUCCESS,
+                statusCode = HttpStatusCode.OK,
+                data = libraries
             )
-        } else checkResponseStatus(
-            message = GENERIC_ERROR,
-            statusCode = HttpStatusCode.NotFound
+        else checkResponseStatus(
+            message = EMPTY_RESULT,
+            statusCode = HttpStatusCode.BadRequest
         )
     }
 
-    override suspend fun findLibraryByName(libraryName: String) =
-        libraryService.findLibraryByName(libraryName)?.let { library ->
+    override suspend fun getLibraryByName(libraryName: String) =
+        libraryService.getLibraryByName(libraryName)?.let { library ->
             checkResponseStatus(
                 message = SUCCESS,
                 statusCode = HttpStatusCode.OK,
                 data = library
             )
         } ?: checkResponseStatus(
-            message = MESSAGE_LIBRARY_NAME,
+            message = EMPTY_RESULT,
             statusCode = HttpStatusCode.NotFound
+        )
+
+    override suspend fun deleteUserLibrary(userId: Int) =
+        if (libraryService.deleteUserLibrary(userId))
+            checkResponseStatus(
+                message = SUCCESS,
+                statusCode = HttpStatusCode.OK
+            )
+        else checkResponseStatus(
+            message = GENERIC_ERROR,
+            statusCode = HttpStatusCode.BadRequest
         )
 
     override suspend fun updateLibraryInfo(libraryDto: LibraryDto) =
@@ -76,8 +75,13 @@ class LibraryRepositoryImpl(
             )
         else checkResponseStatus(
             message = GENERIC_ERROR,
-            statusCode = HttpStatusCode.NotFound
+            statusCode = HttpStatusCode.BadRequest
         )
 
-    override suspend fun checkIfUserHasLibrary(userId: Int) = libraryService.checkIfUserHasLibrary(userId)
+    override suspend fun checkIfUserHasLibrary(userId: Int, libraryId: Int) =
+        libraryService.checkIfUserHasLibrary(userId, libraryId)
+
+    override suspend fun checkIfTheLibraryIsAccepted(userId: Int) =
+        libraryService.checkIfTheLibraryIsAccepted(userId)?.isAccept == true
+
 }

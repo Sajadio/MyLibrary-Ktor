@@ -18,11 +18,10 @@ import java.io.File
 
 fun Route.updateAdminInfo(repository: AdminRepository, gson: Gson) {
     put("/update") {
-        var userRequest: Admin? = null
-        val multipart = call.receiveMultipart()
-        var fileName: String? = null
         try {
-
+            var userRequest: Admin? = null
+            val multipart = call.receiveMultipart()
+            var fileName: String? = null
             multipart.forEachPart { partData ->
                 when (partData) {
                     is PartData.FormItem -> {

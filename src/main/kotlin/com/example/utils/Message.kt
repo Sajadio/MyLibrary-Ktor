@@ -4,6 +4,7 @@ package com.example.utils
 const val MESSAGE_EMAIL_ALREADY_REGISTERED = "Given email is already registered"
 const val INVALID_AUTHENTICATION_TOKEN = "Invalid authentication token, please login again"
 const val GENERIC_ERROR = "Some error occurred! Please try again later"
+const val EMPTY_RESULT = "No result"
 const val LOGIN_FAILURE = "Invalid email or password"
 const val ACCEPT_LIBRARY = "Your library has been accepted"
 const val REJECT_LIBRARY = "Your library has been rejected for lack of information"
@@ -22,7 +23,12 @@ const val ADMIN_LOGIN_SUCCESS = "Admin successfully logged in"
 // fro library
 const val MESSAGE_LIBRARY_NAME = "This library is not exist"
 const val MESSAGE_LIBRARY_ADDITION = "You can't add more than one library"
+const val ACCESS_LIBRARY = "You don't have access for this library"
 
+// for book
+const val MESSAGE_BOOK_NAME = "This book is not exist"
+const val TERMS_ADD_BOOK = "You can't add book because you don't have library or your library don't accepted yet"
+const val ACCESS_BOOK = "You don't have access for this book"
 
 const val SUCCESS = "Success"
 const val ERROR = "error"

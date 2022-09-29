@@ -1,6 +1,7 @@
 package com.example.database
 
 import com.example.database.table.AdminTable
+import com.example.database.table.BookTable
 import com.example.database.table.LibraryTable
 import com.example.database.table.UserTable
 import com.zaxxer.hikari.HikariConfig
@@ -19,6 +20,7 @@ object DatabaseFactory {
             SchemaUtils.create(UserTable)
             SchemaUtils.create(AdminTable)
             SchemaUtils.create(LibraryTable)
+            SchemaUtils.create(BookTable)
         }
     }
 

@@ -1,25 +1,24 @@
-package com.example.routes.library
+package com.example.routes.book
 
-import com.example.domain.model.LibraryDto
+import com.example.domain.model.BookDto
+import com.example.domain.response.BookResponse
+import com.example.repository.book.BookRepository
 import com.example.repository.library.LibraryRepository
 import com.example.routes.userId
 import com.example.utils.*
-import com.example.domain.response.AdminResponse
-import com.example.domain.response.LibraryResponse
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.addLibrary(repository: LibraryRepository) {
-    post("library/add") {
+fun Route.addBook(repository: BookRepository, libraryRepo: LibraryRepository) {
+    post("book/add") {
         try {
-            val request = call.receive<LibraryDto>()
-
+            val request = call.receive<BookDto>()
             if (request.userId != call.userId.toInt()) {
                 call.respond(
-                    HttpStatusCode.BadRequest, LibraryResponse(
+                    HttpStatusCode.BadRequest, BookResponse(
                         status = ERROR,
                         message = INVALID_AUTHENTICATION_TOKEN
                     )
@@ -27,20 +26,30 @@ fun Route.addLibrary(repository: LibraryRepository) {
                 return@post
             }
 
-            if (repository.checkIfUserHasLibrary(request.userId, request.libraryId)) {
+            if (!libraryRepo.checkIfTheLibraryIsAccepted(call.userId.toInt())) {
                 call.respond(
-                    HttpStatusCode.BadRequest, LibraryResponse(
+                    HttpStatusCode.BadRequest, BookResponse(
                         status = ERROR,
-                        message = MESSAGE_LIBRARY_ADDITION,
+                        message = TERMS_ADD_BOOK
                     )
                 )
                 return@post
             }
 
-            when (val result = repository.addLibrary(request)) {
+            if (!libraryRepo.checkIfUserHasLibrary(call.userId.toInt(), request.libraryId)) {
+                call.respond(
+                    HttpStatusCode.BadRequest, BookResponse(
+                        status = OK,
+                        message = ACCESS_LIBRARY,
+                    )
+                )
+                return@post
+            }
+
+            when (val result = repository.addBook(request)) {
                 is Response.SuccessResponse -> {
                     call.respond(
-                        result.statusCode, LibraryResponse(
+                        result.statusCode, BookResponse(
                             status = OK,
                             message = result.message,
                         )
@@ -49,16 +58,17 @@ fun Route.addLibrary(repository: LibraryRepository) {
 
                 is Response.ErrorResponse -> {
                     call.respond(
-                        result.statusCode, AdminResponse(
+                        result.statusCode, BookResponse(
                             status = ERROR,
                             message = result.message,
                         )
                     )
                 }
             }
+
         } catch (e: Exception) {
             call.respond(
-                HttpStatusCode.BadRequest, LibraryResponse(
+                HttpStatusCode.BadRequest, BookResponse(
                     status = ERROR,
                     message = e.message
                 )

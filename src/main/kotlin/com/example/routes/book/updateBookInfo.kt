@@ -1,46 +1,42 @@
-package com.example.routes.admin
+package com.example.routes.book
 
-import com.example.data.mapper.implement.AdminBodyMapper
-import com.example.domain.model.AdminDto
-import com.example.repository.admin.AdminRepository
-import com.example.routes.adminId
+import com.example.domain.model.BookDto
+import com.example.domain.response.BookResponse
+import com.example.repository.book.BookRepository
+import com.example.routes.*
 import com.example.utils.*
-import com.example.utils.Response
-import com.example.domain.response.AdminResponse
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.getAdminInfo(repository: AdminRepository) {
-    get {
+fun Route.updateBookInfo(repository: BookRepository) {
+    put("book/update") {
         try {
-            if (call.adminId.isEmpty()) {
+            val request = call.receive<BookDto>()
+            if (request.userId != call.userId.toInt()) {
                 call.respond(
-                    HttpStatusCode.BadRequest, AdminResponse(
+                    HttpStatusCode.BadRequest, BookResponse(
                         status = ERROR,
                         message = INVALID_AUTHENTICATION_TOKEN
                     )
                 )
-                return@get
+                return@put
             }
-
-            when (val result = repository.getAdminById(call.adminId.toInt())) {
+            when (val result = repository.updateBookInfo(request)) {
                 is Response.SuccessResponse -> {
-                    val adminDto = result.data as AdminDto
-                    val mapper = AdminBodyMapper.mapTo(adminDto)
                     call.respond(
-                        result.statusCode, AdminResponse(
+                        result.statusCode, BookResponse(
                             status = OK,
                             message = result.message,
-                            admin = mapper
                         )
                     )
                 }
 
                 is Response.ErrorResponse -> {
                     call.respond(
-                        result.statusCode, AdminResponse(
+                        result.statusCode, BookResponse(
                             status = ERROR,
                             message = result.message,
                         )
@@ -49,11 +45,12 @@ fun Route.getAdminInfo(repository: AdminRepository) {
             }
         } catch (e: Exception) {
             call.respond(
-                HttpStatusCode.BadRequest, AdminResponse(
+                HttpStatusCode.BadRequest, BookResponse(
                     status = ERROR,
                     message = e.message
                 )
             )
         }
     }
+
 }

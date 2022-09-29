@@ -1,19 +1,19 @@
 package com.example.routes.admin
 
-import com.example.data.mapper.implement.AdminBodyMapper
-import com.example.domain.model.AdminDto
 import com.example.repository.admin.AdminRepository
 import com.example.routes.adminId
-import com.example.utils.*
+import com.example.utils.ERROR
+import com.example.utils.OK
 import com.example.utils.Response
 import com.example.domain.response.AdminResponse
+import com.example.utils.INVALID_AUTHENTICATION_TOKEN
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.getAdminInfo(repository: AdminRepository) {
-    get {
+fun Route.deleteAllLibraries(repository: AdminRepository) {
+    get("libraries/deleteAll") {
         try {
             if (call.adminId.isEmpty()) {
                 call.respond(
@@ -24,16 +24,12 @@ fun Route.getAdminInfo(repository: AdminRepository) {
                 )
                 return@get
             }
-
-            when (val result = repository.getAdminById(call.adminId.toInt())) {
+            when (val result = repository.deleteAllLibraries()) {
                 is Response.SuccessResponse -> {
-                    val adminDto = result.data as AdminDto
-                    val mapper = AdminBodyMapper.mapTo(adminDto)
                     call.respond(
                         result.statusCode, AdminResponse(
                             status = OK,
                             message = result.message,
-                            admin = mapper
                         )
                     )
                 }
@@ -55,5 +51,6 @@ fun Route.getAdminInfo(repository: AdminRepository) {
                 )
             )
         }
+
     }
 }

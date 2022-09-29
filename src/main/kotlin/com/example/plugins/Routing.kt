@@ -3,15 +3,14 @@ package com.example.plugins
 import com.example.di.appModule
 import com.example.repository.admin.AdminRepository
 import com.example.repository.auth.AuthRepository
+import com.example.repository.book.BookRepository
 import com.example.repository.library.LibraryRepository
 import com.example.repository.user.UserRepository
 import com.example.routes.admin.*
 import com.example.routes.auth.login
 import com.example.routes.auth.signUp
-import com.example.routes.library.addLibrary
-import com.example.routes.library.getAllLibrary
-import com.example.routes.library.getLibrary
-import com.example.routes.library.updateLibraryInfo
+import com.example.routes.book.*
+import com.example.routes.library.*
 import com.example.routes.user.getUserInfo
 import com.example.routes.user.updateUserInfo
 import com.google.gson.Gson
@@ -35,15 +34,24 @@ fun Application.configureRouting() {
         val gson: Gson by inject()
         val libraryRepo by inject<LibraryRepository>()
         val userRepo by inject<UserRepository>()
+        val bookRepo by inject<BookRepository>()
         route("/user") {
             authenticate("auth-user") {
                 getUserInfo(userRepo)
                 updateUserInfo(userRepo, gson)
                 addLibrary(libraryRepo)
-                getLibrary(libraryRepo)
-                getAllLibrary(libraryRepo)
                 updateLibraryInfo(libraryRepo)
+                addBook(bookRepo,libraryRepo)
+                deleteUserLibrary(libraryRepo)
+                deleteBookById(bookRepo)
+                deleteAllBooks(bookRepo)
+                updateBookInfo(bookRepo)
             }
+            getLibraryById(libraryRepo)
+            getAllLibrary(libraryRepo)
+            getBookByTitle(bookRepo)
+            getBookById(bookRepo)
+            getAllBooks(bookRepo)
         }
 
         route("/admin") {
@@ -53,10 +61,12 @@ fun Application.configureRouting() {
                 getAllUser(adminRepo)
                 deleteAllUser(adminRepo)
                 deleteUserById(adminRepo)
-                findUserByEmail(adminRepo)
+                deleteLibraryById(adminRepo)
+                getUserByEmail(adminRepo)
                 updateAdminInfo(adminRepo, gson)
                 getAllLibrariesNotAccepted(adminRepo)
-                acceptLibrary(adminRepo,userRepo,libraryRepo)
+                deleteAllLibraries(adminRepo)
+                acceptLibrary(adminRepo, userRepo, libraryRepo)
                 rejectLibrary(adminRepo)
             }
         }
