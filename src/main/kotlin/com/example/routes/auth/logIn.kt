@@ -11,7 +11,7 @@ import com.example.utils.AuthType
 import com.example.utils.ERROR
 import com.example.utils.OK
 import com.example.utils.Response
-import com.example.utils.response.AuthResponse
+import com.example.domain.response.AuthResponse
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*

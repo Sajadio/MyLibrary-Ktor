@@ -3,8 +3,8 @@ package com.example.security
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
-import com.example.utils.response.ErrorResponse
-import com.example.utils.response.TokenResponse
+import com.example.domain.response.ErrorResponse
+import com.example.domain.response.TokenResponse
 import com.example.utils.ERROR
 import com.example.utils.EXPIRY_TIME
 import com.example.utils.INVALID_AUTHENTICATION_TOKEN

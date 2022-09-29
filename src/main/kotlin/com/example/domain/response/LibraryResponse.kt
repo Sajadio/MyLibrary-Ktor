@@ -1,4 +1,4 @@
-package com.example.utils.response
+package com.example.domain.response
 
 import kotlinx.serialization.Serializable
 
@@ -26,5 +26,6 @@ data class Library(
     val library_poster: String?,
     val library_rate: Double?,
     val libraryPhone: String?,
+    val isVerify: Boolean?,
     val createdAt: String = ""
 )

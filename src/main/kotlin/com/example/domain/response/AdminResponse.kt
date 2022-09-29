@@ -1,18 +1,25 @@
-package com.example.utils.response
+package com.example.domain.response
 
 import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class UserResponse(
+data class AdminResponse(
     val status: String,
     val message: String? = null,
-    val user: User? = null
+    val admin: Admin? = null,
 )
 
 @Serializable
-data class User(
-    val userId: Int = 0,
+data class UsersResponse(
+    val status: String,
+    val message: String? = null,
+    val users: List<User>? = null
+)
+
+@Serializable
+data class Admin(
+    val adminId: Int = 0,
     val fullName: String? = null,
     val urlPhoto: String? = null,
     val email: String? = null,

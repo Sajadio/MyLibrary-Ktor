@@ -1,33 +1,33 @@
 package com.example.routes.admin
-import com.example.data.mapper.implement.AdminBodyMapper
-import com.example.domain.model.AdminDto
+
+import com.example.data.mapper.implement.LibrariesBodyMapper
+import com.example.domain.model.LibraryDto
+import com.example.domain.response.LibrariesResponse
 import com.example.repository.admin.AdminRepository
-import com.example.routes.adminId
-import com.example.utils.*
+import com.example.utils.ERROR
+import com.example.utils.OK
 import com.example.utils.Response
-import com.example.domain.response.AdminResponse
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.getAdminInfo(repository: AdminRepository) {
-    get {
-        when (val result = repository.getAdminById(call.adminId.toInt())) {
+fun Route.getAllLibrariesNotAccepted(repository: AdminRepository){
+    get("/libraries/new") {
+        when (val result = repository.getAllLibrariesNotAccepted()) {
             is Response.SuccessResponse -> {
-                val adminDto = result.data as AdminDto
-                val mapper = AdminBodyMapper.mapTo(adminDto)
+                val mapper = LibrariesBodyMapper.mapTo(result.data as List<LibraryDto>)
                 call.respond(
-                    result.statusCode, AdminResponse(
+                    result.statusCode, LibrariesResponse(
                         status = OK,
                         message = result.message,
-                        admin = mapper
+                        libraries = mapper
                     )
                 )
             }
 
             is Response.ErrorResponse -> {
                 call.respond(
-                    result.statusCode, AdminResponse(
+                    result.statusCode, LibrariesResponse(
                         status = ERROR,
                         message = result.message,
                     )

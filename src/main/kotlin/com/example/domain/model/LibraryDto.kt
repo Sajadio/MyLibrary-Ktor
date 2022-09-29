@@ -8,5 +8,6 @@ data class LibraryDto(
     val library_poster: String?,
     val library_rate: Double? = null,
     val libraryPhone: String?,
+    val isAccept: Boolean = false,
     val createdAt: String = ""
 )

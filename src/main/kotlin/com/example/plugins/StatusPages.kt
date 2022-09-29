@@ -1,7 +1,7 @@
 package com.example.plugins
 
 
-import com.example.utils.response.ErrorResponse
+import com.example.domain.response.ErrorResponse
 import com.example.utils.ERROR
 import com.fasterxml.jackson.core.JsonParseException
 import io.ktor.http.*

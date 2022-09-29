@@ -1,4 +1,4 @@
-package com.example.utils.response
+package com.example.domain.response
 
 data class AuthResponse(
     val status: String,

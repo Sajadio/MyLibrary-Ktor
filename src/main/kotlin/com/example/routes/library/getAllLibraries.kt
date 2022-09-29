@@ -6,7 +6,7 @@ import com.example.repository.library.LibraryRepository
 import com.example.utils.ERROR
 import com.example.utils.OK
 import com.example.utils.Response
-import com.example.utils.response.LibrariesResponse
+import com.example.domain.response.LibrariesResponse
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*

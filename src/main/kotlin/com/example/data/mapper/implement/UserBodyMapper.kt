@@ -2,7 +2,7 @@ package com.example.data.mapper.implement
 
 import com.example.data.mapper.Mapper
 import com.example.domain.model.UserDto
-import com.example.utils.response.User
+import com.example.domain.response.User
 
 object UserBodyMapper : Mapper<UserDto, User> {
     override fun mapTo(input: UserDto): User {

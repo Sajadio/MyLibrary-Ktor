@@ -78,4 +78,6 @@ class LibraryRepositoryImpl(
             message = GENERIC_ERROR,
             statusCode = HttpStatusCode.NotFound
         )
+
+    override suspend fun checkIfUserHasLibrary(userId: Int) = libraryService.checkIfUserHasLibrary(userId)
 }

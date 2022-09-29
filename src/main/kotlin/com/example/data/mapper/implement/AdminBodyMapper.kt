@@ -3,8 +3,8 @@ package com.example.data.mapper.implement
 import com.example.data.mapper.Mapper
 import com.example.domain.model.AdminDto
 import com.example.domain.model.UserDto
-import com.example.utils.response.Admin
-import com.example.utils.response.User
+import com.example.domain.response.Admin
+import com.example.domain.response.User
 
 object AdminBodyMapper : Mapper<AdminDto, Admin> {
     override fun mapTo(input: AdminDto): Admin {

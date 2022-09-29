@@ -1,11 +1,8 @@
 package com.example.service.admin
 
 import com.example.database.DatabaseFactory
-import com.example.database.table.AdminTable
-import com.example.database.table.UserTable
-import com.example.database.table.toAdminDto
-import com.example.database.table.toUserDto
-import com.example.utils.response.Admin
+import com.example.database.table.*
+import com.example.domain.response.Admin
 import org.jetbrains.exposed.sql.*
 
 class AdminServiceImpl : AdminService {
@@ -15,7 +12,6 @@ class AdminServiceImpl : AdminService {
                 result.toAdminDto()
             }.singleOrNull()
     }
-
 
     override suspend fun updateAdminInfo(admin: Admin, adminId: Int) = DatabaseFactory.dbQuery {
         AdminTable.update({ AdminTable.adminId eq adminId }) {
@@ -32,7 +28,6 @@ class AdminServiceImpl : AdminService {
             }
     }
 
-
     override suspend fun getUserById(userId: Int) = DatabaseFactory.dbQuery {
         UserTable.select {
             UserTable.userId.eq(userId)
@@ -40,7 +35,6 @@ class AdminServiceImpl : AdminService {
             result.toUserDto()
         }.singleOrNull()
     }
-
 
     override suspend fun findUserByEmail(email: String) = DatabaseFactory.dbQuery {
         UserTable.select {
@@ -59,4 +53,26 @@ class AdminServiceImpl : AdminService {
             UserTable.userId.eq(userId)
         } > 0
     }
+
+    override suspend fun getAllLibrariesNotAccepted() = DatabaseFactory.dbQuery {
+        LibraryTable.select {
+            LibraryTable.isAccept eq false
+        }.map { result ->
+            result.toLibraryDto()
+        }
+    }
+
+    override suspend fun acceptLibrary(libraryId: Int) =
+        DatabaseFactory.dbQuery {
+            LibraryTable.update({ LibraryTable.libraryId eq libraryId }) {
+                it[isAccept] = true
+            } > 0
+        }
+
+    override suspend fun rejectLibrary(libraryId: Int) =
+        DatabaseFactory.dbQuery {
+            LibraryTable.deleteWhere {
+                LibraryTable.libraryId eq libraryId
+            }
+        } > 0
 }

@@ -23,12 +23,13 @@ class AuthRepositoryImpl(
     )
 
 
+
     override suspend fun userLogIn(userCredentials: UserCredentials) =
         userAuth.userLogIn(userCredentials)?.let { result ->
             checkResponseStatus(
-                USER_LOGIN_SUCCESS,
-                HttpStatusCode.OK,
-                result
+                message = USER_LOGIN_SUCCESS,
+                statusCode = HttpStatusCode.OK,
+                data = result
             )
         } ?: checkResponseStatus(
             message = LOGIN_FAILURE,
@@ -39,9 +40,9 @@ class AuthRepositoryImpl(
 
     override suspend fun adminSignUp(newAdmin: NewAdmin) = adminAuth.adminSignUp(newAdmin)?.let { result ->
         checkResponseStatus(
-            ADMIN_REGISTRATION_SUCCESS,
-            HttpStatusCode.OK,
-            result
+            message = ADMIN_REGISTRATION_SUCCESS,
+            statusCode = HttpStatusCode.OK,
+            data = result
         )
     } ?: checkResponseStatus(
         message = MESSAGE_EMAIL_ALREADY_REGISTERED,
@@ -51,9 +52,9 @@ class AuthRepositoryImpl(
     override suspend fun adminLogIn(adminCredentials: AdminCredentials) =
         adminAuth.adminLogIn(adminCredentials)?.let { result ->
             checkResponseStatus(
-                ADMIN_LOGIN_SUCCESS,
-                HttpStatusCode.OK,
-                result
+                message = ADMIN_LOGIN_SUCCESS,
+                statusCode = HttpStatusCode.OK,
+                data = result
             )
         } ?: checkResponseStatus(
             message = ADMIN_LOGIN_SUCCESS,

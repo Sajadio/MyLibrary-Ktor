@@ -1,6 +1,6 @@
 package com.example.utils.validate
 
-import com.example.utils.response.AuthResponse
+import com.example.domain.response.AuthResponse
 import com.example.utils.*
 import io.ktor.http.*
 import java.util.regex.Pattern

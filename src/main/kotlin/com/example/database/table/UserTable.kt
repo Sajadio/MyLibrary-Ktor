@@ -14,6 +14,7 @@ object UserTable : Table("users") {
     val email = varchar("email", 256).nullable()
     val password = text("password").nullable()
     val phoneNumber = text("phone_number").nullable()
+    val doHaveLibrary = bool("doHaveLibrary").default(false)
     val createdAt = datetime("created_at").clientDefault { LocalDateTime.now() }
     override val primaryKey = PrimaryKey(userId)
 }
@@ -27,6 +28,7 @@ fun ResultRow?.toUserDto(): UserDto? {
             email = this[UserTable.email],
             password = this[UserTable.password].toString(),
             phoneNumber = this[UserTable.phoneNumber],
+            doHaveLibrary = this[UserTable.doHaveLibrary],
             createdAt = this[UserTable.createdAt].toString(),
         )
     } ?: return null

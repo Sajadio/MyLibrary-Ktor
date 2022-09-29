@@ -2,7 +2,7 @@ package com.example.data.mapper.implement
 
 import com.example.data.mapper.Mapper
 import com.example.domain.model.LibraryDto
-import com.example.utils.response.Library
+import com.example.domain.response.Library
 
 object LibraryBodyMapper : Mapper<LibraryDto, Library> {
     override fun mapTo(input: LibraryDto): Library {
@@ -14,6 +14,7 @@ object LibraryBodyMapper : Mapper<LibraryDto, Library> {
             library_poster = input.library_poster,
             library_rate = input.library_rate,
             libraryPhone = input.libraryPhone,
+            isVerify = input.isAccept,
             createdAt = input.createdAt
         )
     }

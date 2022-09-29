@@ -2,9 +2,13 @@ package com.example.service.library
 
 import com.example.database.DatabaseFactory
 import com.example.database.table.LibraryTable
+import com.example.database.table.UserTable
 import com.example.database.table.toLibraryDto
+import com.example.database.table.toUserDto
 import com.example.domain.model.LibraryDto
+import kotlinx.coroutines.selects.select
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
 class LibraryServiceImpl : LibraryService {
 
@@ -52,4 +56,10 @@ class LibraryServiceImpl : LibraryService {
             it[libraryPhone] = libraryDto.libraryPhone
         }
     } > 0
+
+    override suspend fun checkIfUserHasLibrary(userId: Int) = DatabaseFactory.dbQuery {
+        LibraryTable.select {
+            LibraryTable.userId eq userId
+        }.count() > 0
+    }
 }

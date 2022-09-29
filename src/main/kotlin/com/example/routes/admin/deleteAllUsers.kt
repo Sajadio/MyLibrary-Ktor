@@ -10,7 +10,7 @@ import com.example.routes.adminId
 import com.example.utils.ERROR
 import com.example.utils.OK
 import com.example.utils.Response
-import com.example.utils.response.AdminResponse
+import com.example.domain.response.AdminResponse
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*

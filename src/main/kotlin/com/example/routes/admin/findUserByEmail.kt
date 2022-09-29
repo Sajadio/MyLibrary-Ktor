@@ -8,8 +8,8 @@ import com.example.domain.model.UserDto
 import com.example.repository.admin.AdminRepository
 import com.example.routes.adminId
 import com.example.utils.*
-import com.example.utils.response.AdminResponse
-import com.example.utils.response.UserResponse
+import com.example.domain.response.AdminResponse
+import com.example.domain.response.UserResponse
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*

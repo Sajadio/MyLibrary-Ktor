@@ -3,8 +3,8 @@ package com.example.routes.admin
 import com.example.repository.admin.AdminRepository
 import com.example.routes.adminId
 import com.example.utils.*
-import com.example.utils.response.Admin
-import com.example.utils.response.AdminResponse
+import com.example.domain.response.Admin
+import com.example.domain.response.AdminResponse
 import com.google.gson.Gson
 import io.ktor.http.*
 import io.ktor.http.content.*
@@ -73,6 +73,7 @@ fun Route.updateAdminInfo(repository: AdminRepository, gson: Gson) {
                         )
                     }
                 }
+
             } ?: call.respond(
                 HttpStatusCode.BadRequest, AdminResponse(
                     status = ERROR,

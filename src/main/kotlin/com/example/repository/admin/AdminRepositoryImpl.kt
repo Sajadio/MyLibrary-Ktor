@@ -2,7 +2,7 @@ package com.example.repository.admin
 
 import com.example.service.admin.AdminService
 import com.example.utils.*
-import com.example.utils.response.Admin
+import com.example.domain.response.Admin
 import io.ktor.http.*
 
 class AdminRepositoryImpl(
@@ -86,4 +86,41 @@ class AdminRepositoryImpl(
             message = MESSAGE_USER_ID,
             statusCode = HttpStatusCode.NotFound
         )
+
+    override suspend fun getAllLibrariesNotAccepted(): Response<Any> {
+        val libraries = adminService.getAllLibrariesNotAccepted()
+        return if (libraries.isNotEmpty()) {
+            checkResponseStatus(
+                SUCCESS,
+                HttpStatusCode.OK,
+                libraries
+            )
+        } else checkResponseStatus(
+            message = GENERIC_ERROR,
+            statusCode = HttpStatusCode.NotFound
+        )
+    }
+
+    override suspend fun acceptLibrary(libraryId: Int) = if (adminService.acceptLibrary(libraryId))
+        checkResponseStatus(
+            ACCEPT_LIBRARY,
+            HttpStatusCode.OK
+        )
+    else
+        checkResponseStatus(
+            message = GENERIC_ERROR,
+            statusCode = HttpStatusCode.NotFound
+        )
+
+    override suspend fun rejectLibrary(libraryId: Int) =
+        if (adminService.rejectLibrary(libraryId))
+            checkResponseStatus(
+                REJECT_LIBRARY,
+                HttpStatusCode.OK
+            )
+        else
+            checkResponseStatus(
+                message = GENERIC_ERROR,
+                statusCode = HttpStatusCode.NotFound
+            )
 }

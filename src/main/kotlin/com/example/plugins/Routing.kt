@@ -33,10 +33,10 @@ fun Application.configureRouting() {
         }
 
         val gson: Gson by inject()
+        val libraryRepo by inject<LibraryRepository>()
+        val userRepo by inject<UserRepository>()
         route("/user") {
             authenticate("auth-user") {
-                val userRepo by inject<UserRepository>()
-                val libraryRepo by inject<LibraryRepository>()
                 getUserInfo(userRepo)
                 updateUserInfo(userRepo, gson)
                 addLibrary(libraryRepo)
@@ -55,6 +55,9 @@ fun Application.configureRouting() {
                 deleteUserById(adminRepo)
                 findUserByEmail(adminRepo)
                 updateAdminInfo(adminRepo, gson)
+                getAllLibrariesNotAccepted(adminRepo)
+                acceptLibrary(adminRepo,userRepo,libraryRepo)
+                rejectLibrary(adminRepo)
             }
         }
     }

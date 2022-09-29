@@ -2,7 +2,7 @@ package com.example.data.mapper.implement
 
 import com.example.data.mapper.Mapper
 import com.example.domain.model.LibraryDto
-import com.example.utils.response.Library
+import com.example.domain.response.Library
 
 object LibrariesBodyMapper : Mapper<List<LibraryDto>, List<Library>> {
 
@@ -18,6 +18,7 @@ object LibrariesBodyMapper : Mapper<List<LibraryDto>, List<Library>> {
                     library_poster = it.library_poster,
                     library_rate = it.library_rate,
                     libraryPhone = it.libraryPhone,
+                    isVerify = it.isAccept,
                     createdAt = it.createdAt
                 )
             )

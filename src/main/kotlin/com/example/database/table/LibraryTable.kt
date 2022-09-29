@@ -16,6 +16,7 @@ object LibraryTable : Table("library") {
     val library_poster = text("library_poster").nullable()
     val library_rate = double("library_rate").nullable()
     val libraryPhone = text("library_phone").nullable()
+    val isAccept = bool("is_accept").default(false)
     val createdAt = datetime("created_at").clientDefault { LocalDateTime.now() }
     override val primaryKey = PrimaryKey(libraryId)
 }
@@ -30,6 +31,7 @@ fun ResultRow?.toLibraryDto(): LibraryDto? {
             library_poster = "$BASE_URL${this[LibraryTable.library_poster]}",
             library_rate = this[LibraryTable.library_rate],
             libraryPhone = this[LibraryTable.libraryPhone].toString(),
+            isAccept = this[LibraryTable.isAccept],
             createdAt = this[LibraryTable.createdAt].toString(),
         )
     } ?: return null

@@ -5,9 +5,9 @@ import com.example.domain.model.LibraryDto
 import com.example.repository.library.LibraryRepository
 import com.example.routes.userId
 import com.example.utils.*
-import com.example.utils.response.AdminResponse
-import com.example.utils.response.Library
-import com.example.utils.response.LibraryResponse
+import com.example.domain.response.AdminResponse
+import com.example.domain.response.Library
+import com.example.domain.response.LibraryResponse
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -18,7 +18,18 @@ fun Route.addLibrary(repository: LibraryRepository) {
     post("/library/add") {
         try {
             val request = call.receive<LibraryDto>()
-            if(request.userId == call.userId.toInt()) {
+            if (request.userId == call.userId.toInt()) {
+
+                if (repository.checkIfUserHasLibrary(request.userId)) {
+                    call.respond(
+                        HttpStatusCode.BadRequest, LibraryResponse(
+                            status = ERROR,
+                            message = MESSAGE_LIBRARY_ADDITION,
+                        )
+                    )
+                    return@post
+                }
+
                 when (val result = repository.addLibrary(request)) {
                     is Response.SuccessResponse -> {
                         call.respond(
@@ -38,7 +49,7 @@ fun Route.addLibrary(repository: LibraryRepository) {
                         )
                     }
                 }
-            }else
+            } else
                 call.respond(
                     HttpStatusCode.BadRequest, LibraryResponse(
                         status = ERROR,

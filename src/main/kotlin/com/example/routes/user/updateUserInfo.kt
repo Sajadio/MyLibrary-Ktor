@@ -3,8 +3,8 @@ package com.example.routes.user
 import com.example.repository.user.UserRepository
 import com.example.routes.userId
 import com.example.utils.*
-import com.example.utils.response.AdminResponse
-import com.example.utils.response.User
+import com.example.domain.response.AdminResponse
+import com.example.domain.response.User
 import com.google.gson.Gson
 import io.ktor.http.*
 import io.ktor.http.content.*

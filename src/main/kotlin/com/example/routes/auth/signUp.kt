@@ -8,7 +8,7 @@ import com.example.repository.auth.AuthRepository
 import com.example.security.JwtService
 import com.example.security.UserPrincipal
 import com.example.utils.*
-import com.example.utils.response.AuthResponse
+import com.example.domain.response.AuthResponse
 import com.example.utils.validate.ValidateEmail
 import com.example.utils.validate.ValidatePassword
 import io.ktor.http.*

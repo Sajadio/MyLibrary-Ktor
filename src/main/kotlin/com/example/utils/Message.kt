@@ -5,6 +5,8 @@ const val MESSAGE_EMAIL_ALREADY_REGISTERED = "Given email is already registered"
 const val INVALID_AUTHENTICATION_TOKEN = "Invalid authentication token, please login again"
 const val GENERIC_ERROR = "Some error occurred! Please try again later"
 const val LOGIN_FAILURE = "Invalid email or password"
+const val ACCEPT_LIBRARY = "Your library has been accepted"
+const val REJECT_LIBRARY = "Your library has been rejected for lack of information"
 
 
 // for user
@@ -19,6 +21,7 @@ const val ADMIN_LOGIN_SUCCESS = "Admin successfully logged in"
 
 // fro library
 const val MESSAGE_LIBRARY_NAME = "This library is not exist"
+const val MESSAGE_LIBRARY_ADDITION = "You can't add more than one library"
 
 
 const val SUCCESS = "Success"

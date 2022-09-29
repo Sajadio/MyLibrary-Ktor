@@ -1,6 +1,6 @@
 package com.example.repository.user
 
-import com.example.utils.response.User
+import com.example.domain.response.User
 import com.example.service.user.UserService
 import com.example.utils.*
 import io.ktor.http.*
@@ -32,5 +32,8 @@ class UserRepositoryImpl(
             message = GENERIC_ERROR,
             statusCode = HttpStatusCode.BadRequest,
         )
+
+    override suspend fun updateStatusLibraryForUser(userId: Int) = userService.updateStatusLibraryForUser(userId)
+
 
 }

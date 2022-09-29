@@ -7,7 +7,7 @@ import com.example.utils.ERROR
 import com.example.utils.INVALID_AUTHENTICATION_TOKEN
 import com.example.utils.OK
 import com.example.utils.Response
-import com.example.utils.response.LibraryResponse
+import com.example.domain.response.LibraryResponse
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
