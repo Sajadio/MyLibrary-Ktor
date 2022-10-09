@@ -1,15 +1,15 @@
 package com.example.service.library
 
-import com.example.domain.model.LibraryDto
+import com.example.domain.request.Library
 
 interface LibraryService {
-    suspend fun addLibrary(libraryDto: LibraryDto): Boolean
-    suspend fun getLibraryById(libraryId: Int): LibraryDto?
-    suspend fun getAllLibrary(): List<LibraryDto?>
-    suspend fun getLibraryByName(libraryName: String): LibraryDto?
+    suspend fun addLibrary(library: Library): Boolean
+    suspend fun getLibraryById(libraryId: Int): Library?
+    suspend fun getAllLibrary(): List<Library?>
+    suspend fun getLibraryByName(libraryName: String): Library?
     suspend fun deleteUserLibrary(userId: Int): Boolean
-    suspend fun updateLibraryInfo(libraryDto: LibraryDto): Boolean
+    suspend fun updateLibraryInfo(library: Library): Boolean
     suspend fun checkIfUserHasLibrary(userId: Int, libraryId: Int): Boolean
-    suspend fun checkIfTheLibraryIsAccepted(userId: Int): LibraryDto?
+    suspend fun checkIfTheLibraryIsAccepted(userId: Int): Library?
 
 }

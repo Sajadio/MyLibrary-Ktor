@@ -1,6 +1,6 @@
 package com.example.routes.admin
 
-import com.example.repository.admin.AdminRepository
+import com.example.domain.repository.AdminRepository
 import com.example.routes.adminId
 import com.example.utils.ERROR
 import com.example.utils.OK

@@ -1,6 +1,9 @@
-package com.example.domain.model
+package com.example.domain.request
 
-data class BookDto(
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class Book(
     val bookId: Int = 0,
     val userId: Int,
     val libraryId: Int,

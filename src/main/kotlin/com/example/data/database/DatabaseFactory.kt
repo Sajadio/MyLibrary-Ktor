@@ -1,9 +1,9 @@
-package com.example.database
+package com.example.data.database
 
-import com.example.database.table.AdminTable
-import com.example.database.table.BookTable
-import com.example.database.table.LibraryTable
-import com.example.database.table.UserTable
+import com.example.data.database.table.AdminTable
+import com.example.data.database.table.BookTable
+import com.example.data.database.table.LibraryTable
+import com.example.data.database.table.UserTable
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import kotlinx.coroutines.Dispatchers

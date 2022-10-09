@@ -1,9 +1,8 @@
 package com.example.routes.book
 
-import com.example.data.mapper.implement.BooksBodyMapper
-import com.example.domain.model.BookDto
+import com.example.domain.request.Book
 import com.example.domain.response.BooksResponse
-import com.example.repository.book.BookRepository
+import com.example.domain.repository.BookRepository
 import com.example.utils.*
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -15,12 +14,12 @@ fun Route.getAllBooks(repository: BookRepository) {
         try {
             when (val result = repository.getAllBooks()) {
                 is Response.SuccessResponse -> {
-                    val mapper = BooksBodyMapper.mapTo(result.data as List<BookDto>)
+                    val books = result.data as List<Book>
                     call.respond(
                         result.statusCode, BooksResponse(
                             status = OK,
                             message = result.message,
-                            books = mapper
+                            books = books
                         )
                     )
                 }

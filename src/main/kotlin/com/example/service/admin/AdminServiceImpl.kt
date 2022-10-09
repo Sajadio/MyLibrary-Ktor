@@ -1,8 +1,8 @@
 package com.example.service.admin
 
-import com.example.database.DatabaseFactory
-import com.example.database.table.*
-import com.example.domain.response.Admin
+import com.example.data.database.DatabaseFactory
+import com.example.data.database.table.*
+import com.example.domain.request.Admin
 import org.jetbrains.exposed.sql.*
 
 class AdminServiceImpl : AdminService {
@@ -56,8 +56,8 @@ class AdminServiceImpl : AdminService {
     override suspend fun deleteAllLibraries() = DatabaseFactory.dbQuery {
         LibraryTable.deleteAll() > 0
     }
-    override suspend fun updateAdminInfo(admin: Admin, adminId: Int) = DatabaseFactory.dbQuery {
-        AdminTable.update({ AdminTable.adminId eq adminId }) {
+    override suspend fun updateAdminInfo(admin: Admin) = DatabaseFactory.dbQuery {
+        AdminTable.update({ AdminTable.adminId eq admin.adminId }) {
             it[fullName] = admin.fullName
             it[email] = admin.email
             it[phoneNumber] = admin.phoneNumber

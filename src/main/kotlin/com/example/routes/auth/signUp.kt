@@ -1,10 +1,10 @@
 package com.example.routes.auth
 
-import com.example.domain.model.AdminDto
-import com.example.domain.model.NewAdmin
-import com.example.domain.model.NewUser
-import com.example.domain.model.UserDto
-import com.example.repository.auth.AuthRepository
+import com.example.domain.request.Admin
+import com.example.domain.request.NewAdmin
+import com.example.domain.request.NewUser
+import com.example.domain.request.User
+import com.example.domain.repository.AuthRepository
 import com.example.security.JwtService
 import com.example.security.UserPrincipal
 import com.example.utils.*
@@ -18,9 +18,9 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Route.signUp(repository: AuthRepository) {
-    post("/signup") {
+    post("/signup/auth/{type}") {
         try {
-            when (call.request.queryParameters["auth-type"]) {
+            when (call.parameters["type"]) {
                 AuthType.ADMIN.name -> {
                     val request = call.receive<NewAdmin>()
 
@@ -40,7 +40,7 @@ fun Route.signUp(repository: AuthRepository) {
                             HttpStatusCode.Forbidden,
                             AuthResponse(
                                 status = ERROR,
-                                message = MESSAGE_EMAIL_ALREADY_REGISTERED,
+                                message = MESSAGE_EMAIL_ALREADY_REGISTERED
                             )
                         )
                         return@post
@@ -48,10 +48,10 @@ fun Route.signUp(repository: AuthRepository) {
 
                     when (val result = repository.adminSignUp(request)) {
                         is Response.SuccessResponse -> {
-                            val adminDto = result.data as AdminDto
+                            val admin = result.data as Admin
                             val userPrincipal = UserPrincipal(
-                                id = adminDto.adminId.toString(),
-                                email = adminDto.email.toString(),
+                                id = admin.adminId.toString(),
+                                email = admin.email.toString(),
                             )
                             val createToken = JwtService.generateAccessToken(userPrincipal)
                             call.respond(
@@ -72,7 +72,6 @@ fun Route.signUp(repository: AuthRepository) {
                             )
                         }
                     }
-
                 }
 
                 AuthType.USER.name -> {
@@ -97,13 +96,13 @@ fun Route.signUp(repository: AuthRepository) {
                         )
                         return@post
                     }
-                    
+
                     when (val result = repository.userSignUp(request)) {
                         is Response.SuccessResponse -> {
-                            val userDto = result.data as UserDto
+                            val user = result.data as User
                             val userPrincipal = UserPrincipal(
-                                id = userDto.userId.toString(),
-                                email = userDto.email.toString(),
+                                id = user.userId.toString(),
+                                email = user.email.toString(),
                             )
                             val createToken = JwtService.generateAccessToken(userPrincipal)
                             call.respond(

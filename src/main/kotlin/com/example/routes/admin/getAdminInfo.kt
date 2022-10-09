@@ -1,8 +1,7 @@
 package com.example.routes.admin
 
-import com.example.data.mapper.implement.AdminBodyMapper
-import com.example.domain.model.AdminDto
-import com.example.repository.admin.AdminRepository
+import com.example.domain.request.Admin
+import com.example.domain.repository.AdminRepository
 import com.example.routes.adminId
 import com.example.utils.*
 import com.example.utils.Response
@@ -27,13 +26,12 @@ fun Route.getAdminInfo(repository: AdminRepository) {
 
             when (val result = repository.getAdminById(call.adminId.toInt())) {
                 is Response.SuccessResponse -> {
-                    val adminDto = result.data as AdminDto
-                    val mapper = AdminBodyMapper.mapTo(adminDto)
+                    val admin = result.data as Admin
                     call.respond(
                         result.statusCode, AdminResponse(
                             status = OK,
                             message = result.message,
-                            admin = mapper
+                            admin = admin
                         )
                     )
                 }

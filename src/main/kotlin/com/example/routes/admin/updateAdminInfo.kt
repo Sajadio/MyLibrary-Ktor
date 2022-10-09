@@ -1,9 +1,9 @@
 package com.example.routes.admin
 
-import com.example.repository.admin.AdminRepository
+import com.example.domain.request.Admin
+import com.example.domain.repository.AdminRepository
 import com.example.routes.adminId
 import com.example.utils.*
-import com.example.domain.response.Admin
 import com.example.domain.response.AdminResponse
 import com.google.gson.Gson
 import io.ktor.http.*
@@ -42,7 +42,6 @@ fun Route.updateAdminInfo(repository: AdminRepository, gson: Gson) {
                 }
             }
 
-            val profilePictureUrl = "${BASE_URL}profile_pictures/${fileName}"
             userRequest?.let {
                 val admin = Admin(
                     adminId = call.adminId.toInt(),
@@ -52,7 +51,7 @@ fun Route.updateAdminInfo(repository: AdminRepository, gson: Gson) {
                     phoneNumber = it.phoneNumber,
                 )
 
-                when (val result = repository.updateAdminInfo(admin, call.adminId.toInt())) {
+                when (val result = repository.updateAdminInfo(admin)) {
                     is Response.SuccessResponse -> {
                         call.respond(
                             result.statusCode, AdminResponse(

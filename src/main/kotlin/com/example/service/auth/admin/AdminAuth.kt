@@ -1,11 +1,11 @@
 package com.example.service.auth.admin
 
-import com.example.domain.model.AdminCredentials
-import com.example.domain.model.AdminDto
-import com.example.domain.model.NewAdmin
+import com.example.domain.request.AdminCredentials
+import com.example.domain.request.Admin
+import com.example.domain.request.NewAdmin
 
 interface AdminAuth {
-    suspend fun adminSignUp(newAdmin: NewAdmin): AdminDto?
-    suspend fun adminLogIn(adminCredentials: AdminCredentials): AdminDto?
-    suspend fun findAdminByEmail(email: String): AdminDto?
+    suspend fun adminSignUp(newAdmin: NewAdmin): Admin?
+    suspend fun adminLogIn(adminCredentials: AdminCredentials): Admin?
+    suspend fun findAdminByEmail(email: String): Admin?
 }

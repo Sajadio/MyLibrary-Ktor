@@ -1,6 +1,6 @@
-package com.example.database.table
+package com.example.data.database.table
 
-import com.example.domain.model.LibraryDto
+import com.example.domain.request.Library
 import com.example.utils.BASE_URL
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.ResultRow
@@ -21,9 +21,9 @@ object LibraryTable : Table("library") {
     override val primaryKey = PrimaryKey(libraryId)
 }
 
-fun ResultRow?.toLibraryDto(): LibraryDto? {
+fun ResultRow?.toLibraryDto(): Library? {
     return this?.let {
-        LibraryDto(
+        Library(
             libraryId = this[LibraryTable.libraryId],
             userId = this[LibraryTable.userId],
             libraryName = this[LibraryTable.libraryName],

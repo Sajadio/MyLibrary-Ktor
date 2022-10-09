@@ -1,6 +1,7 @@
-package com.example.repository.book
+package com.example.data.repository
 
-import com.example.domain.model.BookDto
+import com.example.domain.repository.BookRepository
+import com.example.domain.request.Book
 import com.example.domain.response.BookId
 import com.example.service.book.BookService
 import com.example.utils.*
@@ -10,7 +11,7 @@ class BookRepositoryImpl(
     private val bookService: BookService
 ) : BookRepository {
 
-    override suspend fun addBook(bookDto: BookDto) = if (bookService.addBook(bookDto))
+    override suspend fun addBook(book: Book) = if (bookService.addBook(book))
         checkResponseStatus(
             message = SUCCESS,
             statusCode = HttpStatusCode.OK,
@@ -62,8 +63,8 @@ class BookRepositoryImpl(
             statusCode = HttpStatusCode.NotFound
         )
 
-    override suspend fun updateBookInfo(bookDto: BookDto) =
-        if (bookService.updateBookInfo(bookDto))
+    override suspend fun updateBookInfo(book: Book) =
+        if (bookService.updateBookInfo(book))
             checkResponseStatus(
                 message = SUCCESS,
                 statusCode = HttpStatusCode.OK

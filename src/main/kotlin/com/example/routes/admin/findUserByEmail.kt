@@ -1,8 +1,7 @@
 package com.example.routes.admin
 
-import com.example.data.mapper.implement.UserBodyMapper
-import com.example.domain.model.UserDto
-import com.example.repository.admin.AdminRepository
+import com.example.domain.request.User
+import com.example.domain.repository.AdminRepository
 import com.example.routes.adminId
 import com.example.utils.*
 import com.example.domain.response.UserResponse
@@ -28,13 +27,12 @@ fun Route.getUserByEmail(repository: AdminRepository) {
             email?.let {
                 when (val result = repository.getUserByEmail(email)) {
                     is Response.SuccessResponse -> {
-                        val userDto = result.data as UserDto
-                        val mapper = UserBodyMapper.mapTo(userDto)
+                        val user = result.data as User
                         call.respond(
                             result.statusCode, UserResponse(
                                 status = OK,
                                 message = result.message,
-                                user = mapper
+                                user = user
                             )
                         )
                     }

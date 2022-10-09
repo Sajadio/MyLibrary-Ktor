@@ -1,7 +1,7 @@
 package com.example.routes.library
 
 import com.example.domain.response.LibraryResponse
-import com.example.repository.library.LibraryRepository
+import com.example.domain.repository.LibraryRepository
 import com.example.routes.userId
 import com.example.utils.*
 import io.ktor.http.*

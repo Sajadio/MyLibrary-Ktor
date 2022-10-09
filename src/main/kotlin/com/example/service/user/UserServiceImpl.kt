@@ -1,10 +1,9 @@
 package com.example.service.user
 
-import com.example.database.DatabaseFactory
-import com.example.database.table.UserTable
-import com.example.database.table.toUserDto
-import com.example.domain.model.UserDto
-import com.example.domain.response.User
+import com.example.data.database.DatabaseFactory
+import com.example.data.database.table.UserTable
+import com.example.data.database.table.toUserDto
+import com.example.domain.request.User
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.update
 
@@ -17,11 +16,14 @@ class UserServiceImpl : UserService {
             }.singleOrNull()
     }
 
-    override suspend fun updateProfileUser(user: User, userId: Int) = DatabaseFactory.dbQuery {
-        UserTable.update({ UserTable.userId eq userId }) {
+    override suspend fun updateProfileUser(user: User) = DatabaseFactory.dbQuery {
+        UserTable.update({ UserTable.userId eq user.userId }) {
             it[fullName] = user.fullName
             it[email] = user.email
+            it[urlPhoto] = user.urlPhoto
             it[phoneNumber] = user.phoneNumber
+            it[gander] = gander
+            it[dateOfBirth] = dateOfBirth
         }
     } > 0
 

@@ -1,23 +1,28 @@
-package com.example.domain.model
+package com.example.domain.request
+
+import kotlinx.serialization.Serializable
 
 
-data class AdminDto(
-    val adminId: Int = 0,
+@Serializable
+data class User(
+    val userId: Int = 0,
     val fullName: String? = null,
     val urlPhoto: String? = null,
     val email: String? = null,
-    val password: String? = null,
     val phoneNumber: String? = null,
+    val gander: String? = null,
+    val dateOfBirth: String? = null,
+    val doHaveLibrary: Boolean = false,
     val createdAt: String = ""
 )
 
-data class NewAdmin(
+data class NewUser(
     val fullName: String,
     val email: String,
     val password: String,
 )
 
-data class AdminCredentials(
+data class UserCredentials(
     val email: String,
     val password: String,
 )

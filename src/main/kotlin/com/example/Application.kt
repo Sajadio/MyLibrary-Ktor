@@ -1,11 +1,8 @@
 package com.example
 
-import com.example.database.DatabaseFactory
-import com.example.di.appModule
+import com.example.data.database.DatabaseFactory
 import io.ktor.server.application.*
 import com.example.plugins.*
-import org.koin.core.context.startKoin
-import org.koin.ktor.plugin.Koin
 
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)

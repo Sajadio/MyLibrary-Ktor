@@ -1,10 +1,10 @@
 package com.example.service.auth.user
 
-import com.example.database.DatabaseFactory
-import com.example.database.table.UserTable
-import com.example.database.table.toUserDto
-import com.example.domain.model.NewUser
-import com.example.domain.model.UserCredentials
+import com.example.data.database.DatabaseFactory
+import com.example.data.database.table.UserTable
+import com.example.data.database.table.toUserDto
+import com.example.domain.request.NewUser
+import com.example.domain.request.UserCredentials
 import com.example.security.hashPWS
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.insert

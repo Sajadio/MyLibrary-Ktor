@@ -20,7 +20,7 @@ const val MESSAGE_ADMIN_ID = "This admin is not exist"
 const val ADMIN_REGISTRATION_SUCCESS = "Admin successfully registered"
 const val ADMIN_LOGIN_SUCCESS = "Admin successfully logged in"
 
-// fro library
+// for library
 const val MESSAGE_LIBRARY_NAME = "This library is not exist"
 const val MESSAGE_LIBRARY_ADDITION = "You can't add more than one library"
 const val ACCESS_LIBRARY = "You don't have access for this library"

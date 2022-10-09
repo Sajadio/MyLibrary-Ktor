@@ -1,9 +1,8 @@
 package com.example.routes.admin
 
-import com.example.data.mapper.implement.LibrariesBodyMapper
-import com.example.domain.model.LibraryDto
+import com.example.domain.request.Library
 import com.example.domain.response.LibrariesResponse
-import com.example.repository.admin.AdminRepository
+import com.example.domain.repository.AdminRepository
 import com.example.routes.*
 import com.example.utils.*
 import io.ktor.http.*
@@ -26,12 +25,12 @@ fun Route.getAllLibrariesNotAccepted(repository: AdminRepository) {
 
             when (val result = repository.getAllLibrariesNotAccepted()) {
                 is Response.SuccessResponse -> {
-                    val mapper = LibrariesBodyMapper.mapTo(result.data as List<LibraryDto>)
+                    val libraries = result.data as List<Library>
                     call.respond(
                         result.statusCode, LibrariesResponse(
                             status = OK,
                             message = result.message,
-                            libraries = mapper
+                            libraries = libraries
                         )
                     )
                 }

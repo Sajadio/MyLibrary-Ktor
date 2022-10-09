@@ -1,8 +1,9 @@
-package com.example.repository.admin
+package com.example.data.repository
 
+import com.example.domain.repository.AdminRepository
+import com.example.domain.request.Admin
 import com.example.service.admin.AdminService
 import com.example.utils.*
-import com.example.domain.response.Admin
 import io.ktor.http.*
 
 class AdminRepositoryImpl(
@@ -18,8 +19,8 @@ class AdminRepositoryImpl(
         message = MESSAGE_ADMIN_ID,
         statusCode = HttpStatusCode.NotFound
     )
-    override suspend fun updateAdminInfo(admin: Admin, adminId: Int) =
-        adminService.updateAdminInfo(admin, adminId).takeIf { it }?.run {
+    override suspend fun updateAdminInfo(admin: Admin) =
+        adminService.updateAdminInfo(admin).takeIf { it }?.run {
             checkResponseStatus(
                 SUCCESS,
                 HttpStatusCode.OK,

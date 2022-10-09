@@ -1,7 +1,7 @@
-package com.example.repository.auth
+package com.example.data.repository
 
-import com.example.domain.model.*
-import com.example.service.admin.AdminService
+import com.example.domain.repository.AuthRepository
+import com.example.domain.request.*
 import com.example.service.auth.admin.AdminAuth
 import com.example.service.auth.user.UserAuth
 import com.example.utils.*

@@ -1,12 +1,11 @@
 package com.example.routes.admin
 
-import com.example.data.mapper.implement.LibraryBodyMapper
-import com.example.domain.model.LibraryDto
+import com.example.domain.request.Library
 import com.example.domain.response.AdminResponse
 import com.example.domain.response.LibraryResponse
-import com.example.repository.admin.AdminRepository
-import com.example.repository.library.LibraryRepository
-import com.example.repository.user.UserRepository
+import com.example.domain.repository.AdminRepository
+import com.example.domain.repository.LibraryRepository
+import com.example.domain.repository.UserRepository
 import com.example.routes.adminId
 import com.example.utils.ERROR
 import com.example.utils.INVALID_AUTHENTICATION_TOKEN
@@ -80,7 +79,7 @@ fun Route.acceptLibrary(
 suspend fun updateStatusLibraryForUser(libraryRepo: LibraryRepository, userRepo: UserRepository, libraryId: Int?) {
     val result = libraryRepo.getLibraryById(libraryId!!)
     if (result is Response.SuccessResponse) {
-        val library = LibraryBodyMapper.mapTo(result.data as LibraryDto)
+        val library = result.data as Library
         userRepo.updateStatusLibraryForUser(library.userId)
     }
 }

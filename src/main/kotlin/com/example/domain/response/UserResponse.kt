@@ -1,5 +1,6 @@
 package com.example.domain.response
 
+import com.example.domain.request.User
 import kotlinx.serialization.Serializable
 
 
@@ -10,13 +11,3 @@ data class UserResponse(
     val user: User? = null
 )
 
-@Serializable
-data class User(
-    val userId: Int = 0,
-    val fullName: String? = null,
-    val urlPhoto: String? = null,
-    val email: String? = null,
-    val phoneNumber: String? = null,
-    val doHaveLibrary: Boolean = false,
-    val createdAt: String = ""
-)

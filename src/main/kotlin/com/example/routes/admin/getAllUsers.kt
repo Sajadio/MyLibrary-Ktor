@@ -1,8 +1,7 @@
 package com.example.routes.admin
 
-import com.example.data.mapper.implement.UsersBodyMapper
-import com.example.domain.model.UserDto
-import com.example.repository.admin.AdminRepository
+import com.example.domain.request.User
+import com.example.domain.repository.AdminRepository
 import com.example.utils.*
 import com.example.utils.Response
 import com.example.domain.response.BookResponse
@@ -29,12 +28,12 @@ fun Route.getAllUser(repository: AdminRepository) {
             call.adminId.isNotEmpty().run {
                 when (val result = repository.getAllUsers()) {
                     is Response.SuccessResponse -> {
-                        val mapper = UsersBodyMapper.mapTo(result.data as List<UserDto>)
+                        val users = result.data as List<User>
                         call.respond(
                             result.statusCode, UsersResponse(
                                 status = OK,
                                 message = result.message,
-                                users = mapper
+                                users = users
                             )
                         )
                     }

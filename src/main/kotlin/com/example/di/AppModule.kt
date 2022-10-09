@@ -1,15 +1,15 @@
 package com.example.di
 
-import com.example.repository.admin.AdminRepository
-import com.example.repository.admin.AdminRepositoryImpl
-import com.example.repository.auth.AuthRepository
-import com.example.repository.auth.AuthRepositoryImpl
-import com.example.repository.book.BookRepository
-import com.example.repository.book.BookRepositoryImpl
-import com.example.repository.library.LibraryRepository
-import com.example.repository.library.LibraryRepositoryImpl
-import com.example.repository.user.UserRepository
-import com.example.repository.user.UserRepositoryImpl
+import com.example.domain.repository.AdminRepository
+import com.example.data.repository.AdminRepositoryImpl
+import com.example.domain.repository.AuthRepository
+import com.example.data.repository.AuthRepositoryImpl
+import com.example.domain.repository.BookRepository
+import com.example.data.repository.BookRepositoryImpl
+import com.example.domain.repository.LibraryRepository
+import com.example.data.repository.LibraryRepositoryImpl
+import com.example.domain.repository.UserRepository
+import com.example.data.repository.UserRepositoryImpl
 import com.example.service.admin.AdminService
 import com.example.service.admin.AdminServiceImpl
 import com.example.service.auth.admin.AdminAuth

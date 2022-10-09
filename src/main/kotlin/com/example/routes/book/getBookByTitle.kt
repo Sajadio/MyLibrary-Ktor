@@ -1,9 +1,8 @@
 package com.example.routes.book
 
-import com.example.data.mapper.implement.BooksBodyMapper
-import com.example.database.table.toBookDto
+import com.example.data.database.table.toBookDto
 import com.example.domain.response.BooksResponse
-import com.example.repository.book.BookRepository
+import com.example.domain.repository.BookRepository
 import com.example.utils.ERROR
 import com.example.utils.OK
 import com.example.utils.Response
@@ -20,15 +19,14 @@ fun Route.getBookByTitle(repository: BookRepository) {
             bookTitle?.let {
                 when (val result = repository.getBookByTitle(bookTitle)) {
                     is Response.SuccessResponse -> {
-                        val bookDto = (result.data as List<ResultRow>).map {
+                        val books = (result.data as List<ResultRow>).map {
                             it.toBookDto()!!
                         }
-                        val mapper = BooksBodyMapper.mapTo(bookDto)
                         call.respond(
                             result.statusCode, BooksResponse(
                                 status = OK,
                                 message = result.message,
-                                books = mapper
+                                books = books
                             )
                         )
                     }

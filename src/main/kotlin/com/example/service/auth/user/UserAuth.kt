@@ -1,11 +1,11 @@
 package com.example.service.auth.user
 
-import com.example.domain.model.NewUser
-import com.example.domain.model.UserCredentials
-import com.example.domain.model.UserDto
+import com.example.domain.request.NewUser
+import com.example.domain.request.UserCredentials
+import com.example.domain.request.User
 
 interface UserAuth {
-    suspend fun userSignUp(newUser: NewUser): UserDto?
-    suspend fun userLogIn(userCredentials: UserCredentials): UserDto?
-    suspend fun findUserByEmail(email: String): UserDto?
+    suspend fun userSignUp(newUser: NewUser): User?
+    suspend fun userLogIn(userCredentials: UserCredentials): User?
+    suspend fun findUserByEmail(email: String): User?
 }

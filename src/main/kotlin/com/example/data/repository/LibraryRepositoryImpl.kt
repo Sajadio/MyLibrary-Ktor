@@ -1,6 +1,7 @@
-package com.example.repository.library
+package com.example.data.repository
 
-import com.example.domain.model.LibraryDto
+import com.example.domain.repository.LibraryRepository
+import com.example.domain.request.Library
 import com.example.service.library.LibraryService
 import com.example.utils.*
 import io.ktor.http.*
@@ -8,8 +9,8 @@ import io.ktor.http.*
 class LibraryRepositoryImpl(
     private val libraryService: LibraryService
 ) : LibraryRepository {
-    override suspend fun addLibrary(libraryDto: LibraryDto) =
-        if (libraryService.addLibrary(libraryDto))
+    override suspend fun addLibrary(library: Library) =
+        if (libraryService.addLibrary(library))
             checkResponseStatus(
                 message = SUCCESS,
                 statusCode = HttpStatusCode.OK
@@ -67,8 +68,8 @@ class LibraryRepositoryImpl(
             statusCode = HttpStatusCode.BadRequest
         )
 
-    override suspend fun updateLibraryInfo(libraryDto: LibraryDto) =
-        if (libraryService.updateLibraryInfo(libraryDto))
+    override suspend fun updateLibraryInfo(library: Library) =
+        if (libraryService.updateLibraryInfo(library))
             checkResponseStatus(
                 message = SUCCESS,
                 statusCode = HttpStatusCode.OK

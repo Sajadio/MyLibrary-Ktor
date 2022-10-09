@@ -1,7 +1,7 @@
-package com.example.repository.admin
+package com.example.domain.repository
 
+import com.example.domain.request.Admin
 import com.example.utils.Response
-import com.example.domain.response.Admin
 
 interface AdminRepository {
     suspend fun getAdminById(adminId: Int): Response<Any>
@@ -13,7 +13,7 @@ interface AdminRepository {
     suspend fun deleteUserById(userId: Int): Response<Any>
     suspend fun deleteLibraryById(libraryId: Int): Response<Any>
     suspend fun deleteAllLibraries(): Response<Any>
-    suspend fun updateAdminInfo(admin: Admin, adminId: Int): Response<Any>
+    suspend fun updateAdminInfo(admin: Admin): Response<Any>
     suspend fun acceptLibrary(libraryId: Int): Response<Any>
     suspend fun rejectLibrary(libraryId: Int): Response<Any>
 }

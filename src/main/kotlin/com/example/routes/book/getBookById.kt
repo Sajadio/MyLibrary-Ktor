@@ -1,9 +1,8 @@
 package com.example.routes.book
 
-import com.example.data.mapper.implement.BookBodyMapper
-import com.example.domain.model.BookDto
+import com.example.domain.request.Book
 import com.example.domain.response.BookResponse
-import com.example.repository.book.BookRepository
+import com.example.domain.repository.BookRepository
 import com.example.utils.ERROR
 import com.example.utils.OK
 import com.example.utils.Response
@@ -19,7 +18,7 @@ fun Route.getBookById(repository: BookRepository) {
             bookId?.let {
                 when (val result = repository.getBookById(bookId)) {
                     is Response.SuccessResponse -> {
-                        val book = BookBodyMapper.mapTo(result.data as BookDto)
+                        val book = result.data as Book
                         call.respond(
                             result.statusCode, BookResponse(
                                 status = OK,

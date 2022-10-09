@@ -1,8 +1,7 @@
 package com.example.routes.library
 
-import com.example.data.mapper.implement.LibraryBodyMapper
-import com.example.domain.model.LibraryDto
-import com.example.repository.library.LibraryRepository
+import com.example.domain.request.Library
+import com.example.domain.repository.LibraryRepository
 import com.example.utils.*
 import com.example.domain.response.LibraryResponse
 import io.ktor.http.*
@@ -17,12 +16,12 @@ fun Route.getLibraryById(repository: LibraryRepository) {
             libraryId?.let {
                 when (val result = repository.getLibraryById(libraryId)) {
                     is Response.SuccessResponse -> {
-                        val mapper = LibraryBodyMapper.mapTo(result.data as LibraryDto)
+                        val library = result.data as Library
                         call.respond(
                             result.statusCode, LibraryResponse(
                                 status = OK,
                                 message = result.message,
-                                library = mapper
+                                library = library
                             )
                         )
                     }

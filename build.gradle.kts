@@ -57,10 +57,14 @@ dependencies {
     // Koin
     implementation("io.insert-koin:koin-ktor:$koin_version")
 
-    implementation("com.transloadit.sdk:transloadit:0.3.0")
 
     implementation("io.ktor:ktor-client-core:$ktor_version")
     implementation("io.ktor:ktor-client-cio:$ktor_version")
+
+    implementation("com.transloadit.sdk:transloadit:0.4.2")
+    implementation ("org.json:json:20211205")
+
+
 
 
 }

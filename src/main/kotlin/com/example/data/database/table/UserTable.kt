@@ -1,6 +1,6 @@
-package com.example.database.table
+package com.example.data.database.table
 
-import com.example.domain.model.UserDto
+import com.example.domain.request.User
 import com.example.utils.BASE_URL
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
@@ -14,20 +14,23 @@ object UserTable : Table("users") {
     val email = varchar("email", 256).nullable()
     val password = text("password").nullable()
     val phoneNumber = text("phone_number").nullable()
+    val gander = varchar("gander", 256).nullable()
+    val dateOfBirth = varchar("date_of_birth", 256).nullable()
     val doHaveLibrary = bool("doHaveLibrary").default(false)
     val createdAt = datetime("created_at").clientDefault { LocalDateTime.now() }
     override val primaryKey = PrimaryKey(userId)
 }
 
-fun ResultRow?.toUserDto(): UserDto? {
+fun ResultRow?.toUserDto(): User? {
     return this?.let {
-        UserDto(
+        User(
             userId = this[UserTable.userId],
             fullName = this[UserTable.fullName],
             urlPhoto = "$BASE_URL${this[UserTable.urlPhoto]}",
             email = this[UserTable.email],
-            password = this[UserTable.password].toString(),
             phoneNumber = this[UserTable.phoneNumber],
+            gander = this[UserTable.gander],
+            dateOfBirth = this[UserTable.dateOfBirth],
             doHaveLibrary = this[UserTable.doHaveLibrary],
             createdAt = this[UserTable.createdAt].toString(),
         )

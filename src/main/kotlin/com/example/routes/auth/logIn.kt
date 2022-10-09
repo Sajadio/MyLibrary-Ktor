@@ -1,10 +1,10 @@
 package com.example.routes.auth
 
-import com.example.domain.model.AdminCredentials
-import com.example.domain.model.AdminDto
-import com.example.domain.model.UserCredentials
-import com.example.domain.model.UserDto
-import com.example.repository.auth.AuthRepository
+import com.example.domain.request.AdminCredentials
+import com.example.domain.request.Admin
+import com.example.domain.request.UserCredentials
+import com.example.domain.request.User
+import com.example.domain.repository.AuthRepository
 import com.example.security.JwtService
 import com.example.security.UserPrincipal
 import com.example.utils.AuthType
@@ -19,18 +19,18 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Route.login(repository: AuthRepository) {
-    post("/login") {
+    post("/login/auth/{type}") {
         try {
-            when (call.request.queryParameters["auth-type"]) {
+            when (call.parameters["type"]) {
                 AuthType.ADMIN.name -> {
                     val request = call.receive<AdminCredentials>()
                     when (val result = repository.adminLogIn(request)) {
 
                         is Response.SuccessResponse -> {
-                            val adminDto = result.data as AdminDto
+                            val admin = result.data as Admin
                             val userPrincipal = UserPrincipal(
-                                id = adminDto.adminId.toString(),
-                                email = adminDto.email.toString(),
+                                id = admin.adminId.toString(),
+                                email = admin.email.toString(),
                             )
                             val createToken = JwtService.generateAccessToken(userPrincipal)
                             call.respond(
@@ -58,10 +58,10 @@ fun Route.login(repository: AuthRepository) {
                     when (val result = repository.userLogIn(request)) {
 
                         is Response.SuccessResponse -> {
-                            val userDto = result.data as UserDto
+                            val user = result.data as User
                             val userPrincipal = UserPrincipal(
-                                id = userDto.userId.toString(),
-                                email = userDto.email.toString(),
+                                id = user.userId.toString(),
+                                email = user.email.toString(),
                             )
                             val createToken = JwtService.generateAccessToken(userPrincipal)
                             call.respond(
@@ -92,6 +92,5 @@ fun Route.login(repository: AuthRepository) {
                 )
             )
         }
-
     }
 }

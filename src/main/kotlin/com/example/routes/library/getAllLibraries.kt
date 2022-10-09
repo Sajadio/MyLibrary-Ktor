@@ -1,8 +1,7 @@
 package com.example.routes.library
 
-import com.example.data.mapper.implement.LibrariesBodyMapper
-import com.example.domain.model.LibraryDto
-import com.example.repository.library.LibraryRepository
+import com.example.domain.request.Library
+import com.example.domain.repository.LibraryRepository
 import com.example.utils.ERROR
 import com.example.utils.OK
 import com.example.utils.Response
@@ -17,12 +16,12 @@ fun Route.getAllLibrary(repository: LibraryRepository) {
         try {
             when (val result = repository.getAllLibrary()) {
                 is Response.SuccessResponse -> {
-                    val mapper = LibrariesBodyMapper.mapTo(result.data as List<LibraryDto>)
+                    val libraries = result.data as List<Library>
                     call.respond(
                         result.statusCode, LibrariesResponse(
                             status = OK,
                             message = result.message,
-                            libraries = mapper
+                            libraries = libraries
                         )
                     )
                 }

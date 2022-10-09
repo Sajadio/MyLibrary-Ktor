@@ -1,9 +1,9 @@
 package com.example.routes.book
 
-import com.example.domain.model.BookDto
+import com.example.domain.request.Book
 import com.example.domain.response.BookResponse
-import com.example.repository.book.BookRepository
-import com.example.repository.library.LibraryRepository
+import com.example.domain.repository.BookRepository
+import com.example.domain.repository.LibraryRepository
 import com.example.routes.userId
 import com.example.utils.*
 import io.ktor.http.*
@@ -15,7 +15,7 @@ import io.ktor.server.routing.*
 fun Route.addBook(repository: BookRepository, libraryRepo: LibraryRepository) {
     post("book/add") {
         try {
-            val request = call.receive<BookDto>()
+            val request = call.receive<Book>()
             if (request.userId != call.userId.toInt()) {
                 call.respond(
                     HttpStatusCode.BadRequest, BookResponse(

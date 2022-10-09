@@ -1,7 +1,6 @@
-package com.example.database.table
+package com.example.data.database.table
 
-import com.example.domain.model.AdminDto
-import com.example.domain.model.UserDto
+import com.example.domain.request.Admin
 import com.example.utils.BASE_URL
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
@@ -19,14 +18,13 @@ object AdminTable : Table("admins") {
     override val primaryKey = PrimaryKey(adminId)
 }
 
-fun ResultRow?.toAdminDto(): AdminDto? {
+fun ResultRow?.toAdminDto(): Admin? {
     return this?.let {
-        AdminDto(
+        Admin(
             adminId = this[AdminTable.adminId],
             fullName = this[AdminTable.fullName],
             urlPhoto = "$BASE_URL${this[AdminTable.urlPhoto]}",
             email = this[AdminTable.email],
-            password = this[AdminTable.password].toString(),
             phoneNumber = this[AdminTable.phoneNumber],
             createdAt = this[AdminTable.createdAt].toString(),
         )

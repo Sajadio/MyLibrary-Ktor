@@ -1,20 +1,20 @@
 package com.example.service.library
 
-import com.example.database.DatabaseFactory
-import com.example.database.table.LibraryTable
-import com.example.database.table.toLibraryDto
-import com.example.domain.model.LibraryDto
+import com.example.data.database.DatabaseFactory
+import com.example.data.database.table.LibraryTable
+import com.example.data.database.table.toLibraryDto
+import com.example.domain.request.Library
 import org.jetbrains.exposed.sql.*
 
 class LibraryServiceImpl : LibraryService {
 
-    override suspend fun addLibrary(libraryDto: LibraryDto) = DatabaseFactory.dbQuery {
+    override suspend fun addLibrary(library: Library) = DatabaseFactory.dbQuery {
         LibraryTable.insert {
-            it[userId] = libraryDto.userId
-            it[libraryName] = libraryDto.libraryName
-            it[libraryAddress] = libraryDto.libraryAddress
-            it[library_poster] = libraryDto.library_poster
-            it[libraryPhone] = libraryDto.libraryPhone
+            it[userId] = library.userId
+            it[libraryName] = library.libraryName
+            it[libraryAddress] = library.libraryAddress
+            it[library_poster] = library.library_poster
+            it[libraryPhone] = library.libraryPhone
         }.insertedCount > 0
     }
 
@@ -44,14 +44,14 @@ class LibraryServiceImpl : LibraryService {
         LibraryTable.deleteWhere { LibraryTable.userId eq userId } > 0
     }
 
-    override suspend fun updateLibraryInfo(libraryDto: LibraryDto) = DatabaseFactory.dbQuery {
+    override suspend fun updateLibraryInfo(library: Library) = DatabaseFactory.dbQuery {
         LibraryTable.update({
-            LibraryTable.userId eq libraryDto.userId and (LibraryTable.libraryId eq libraryDto.libraryId)
+            LibraryTable.userId eq library.userId and (LibraryTable.libraryId eq library.libraryId)
         }) {
-            it[libraryName] = libraryDto.libraryName
-            it[libraryAddress] = libraryDto.libraryAddress
-            it[library_poster] = libraryDto.library_poster
-            it[libraryPhone] = libraryDto.libraryPhone
+            it[libraryName] = library.libraryName
+            it[libraryAddress] = library.libraryAddress
+            it[library_poster] = library.library_poster
+            it[libraryPhone] = library.libraryPhone
         }
     } > 0
 

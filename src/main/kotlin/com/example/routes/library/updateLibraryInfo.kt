@@ -1,7 +1,7 @@
 package com.example.routes.library
 
-import com.example.domain.model.LibraryDto
-import com.example.repository.library.LibraryRepository
+import com.example.domain.request.Library
+import com.example.domain.repository.LibraryRepository
 import com.example.routes.userId
 import com.example.utils.ERROR
 import com.example.utils.INVALID_AUTHENTICATION_TOKEN
@@ -17,7 +17,7 @@ import io.ktor.server.routing.*
 fun Route.updateLibraryInfo(repository: LibraryRepository) {
     put("library/update") {
         try {
-            val request = call.receive<LibraryDto>()
+            val request = call.receive<Library>()
             if (request.userId != call.userId.toInt()) {
                 call.respond(
                     HttpStatusCode.BadRequest, LibraryResponse(

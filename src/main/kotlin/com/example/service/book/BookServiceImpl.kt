@@ -1,25 +1,25 @@
 package com.example.service.book
 
-import com.example.database.DatabaseFactory
-import com.example.database.table.BookTable
-import com.example.database.table.toBookDto
-import com.example.domain.model.BookDto
+import com.example.data.database.DatabaseFactory
+import com.example.data.database.table.BookTable
+import com.example.data.database.table.toBookDto
+import com.example.domain.request.Book
 import com.example.domain.response.BookId
 import org.jetbrains.exposed.sql.*
 
 class BookServiceImpl : BookService {
 
-    override suspend fun addBook(bookDto: BookDto) = DatabaseFactory.dbQuery {
+    override suspend fun addBook(book: Book) = DatabaseFactory.dbQuery {
         BookTable.insert {
-            it[userId] = bookDto.userId
-            it[libraryId] = bookDto.libraryId
-            it[bookAuthor] = bookDto.bookAuthor
-            it[bookTitle] = bookDto.bookTitle
-            it[bookPoster] = bookDto.bookPoster
-            it[bookFile] = bookDto.bookFile
-            it[bookBackground] = bookDto.bookBackground
-            it[newPrice] = bookDto.newPrice
-            it[oldPrice] = bookDto.oldPrice
+            it[userId] = book.userId
+            it[libraryId] = book.libraryId
+            it[bookAuthor] = book.bookAuthor
+            it[bookTitle] = book.bookTitle
+            it[bookPoster] = book.bookPoster
+            it[bookFile] = book.bookFile
+            it[bookBackground] = book.bookBackground
+            it[newPrice] = book.newPrice
+            it[oldPrice] = book.oldPrice
         }.insertedCount > 0
     }
 
@@ -43,19 +43,19 @@ class BookServiceImpl : BookService {
         }.singleOrNull()
     }
 
-    override suspend fun updateBookInfo(bookDto: BookDto) = DatabaseFactory.dbQuery {
+    override suspend fun updateBookInfo(book: Book) = DatabaseFactory.dbQuery {
         BookTable.update({
-            BookTable.userId eq bookDto.userId and
-                    (BookTable.libraryId eq bookDto.libraryId) and
-                    (BookTable.bookId eq bookDto.bookId)
+            BookTable.userId eq book.userId and
+                    (BookTable.libraryId eq book.libraryId) and
+                    (BookTable.bookId eq book.bookId)
         }) {
-            it[bookAuthor] = bookDto.bookAuthor
-            it[bookTitle] = bookDto.bookTitle
-            it[bookPoster] = bookDto.bookPoster
-            it[bookFile] = bookDto.bookFile
-            it[bookBackground] = bookDto.bookBackground
-            it[newPrice] = bookDto.newPrice
-            it[oldPrice] = bookDto.oldPrice
+            it[bookAuthor] = book.bookAuthor
+            it[bookTitle] = book.bookTitle
+            it[bookPoster] = book.bookPoster
+            it[bookFile] = book.bookFile
+            it[bookBackground] = book.bookBackground
+            it[newPrice] = book.newPrice
+            it[oldPrice] = book.oldPrice
         }
     } > 0
 
