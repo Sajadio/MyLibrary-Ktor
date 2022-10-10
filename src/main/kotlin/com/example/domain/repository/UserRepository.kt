@@ -5,7 +5,9 @@ import com.example.utils.Response
 
 interface UserRepository {
     suspend fun getUserById(userId: Int): Response<Any>
-    suspend fun updateUserInfo(user: User): Response<Any>
+    suspend fun updateProfileUser(user: User,userId: Int): Response<Any>
     suspend fun updateStatusLibraryForUser(userId: Int):Boolean
+    suspend fun isTheSameImage(imageURi:String):Boolean
+    suspend fun updateProfileImage(imageURi:String,userId: Int): Response<Any>
 
 }

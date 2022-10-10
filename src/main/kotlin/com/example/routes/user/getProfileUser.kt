@@ -6,15 +6,14 @@ import com.example.routes.userId
 import com.example.utils.ERROR
 import com.example.utils.OK
 import com.example.utils.Response
-import com.example.domain.response.AdminResponse
 import com.example.domain.response.UserResponse
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.getUserInfo(repository: UserRepository) {
-    get {
+fun Route.getProfileUser(repository: UserRepository) {
+    get{
         try {
             when (val result = repository.getUserById(call.userId.toInt())) {
                 is Response.SuccessResponse -> {
@@ -30,7 +29,7 @@ fun Route.getUserInfo(repository: UserRepository) {
 
                 is Response.ErrorResponse -> {
                     call.respond(
-                        result.statusCode, AdminResponse(
+                        result.statusCode, UserResponse(
                             status = ERROR,
                             message = result.message,
                         )

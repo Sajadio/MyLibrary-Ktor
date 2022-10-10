@@ -23,19 +23,30 @@ class UserRepositoryImpl(
         )
 
 
-    override suspend fun updateUserInfo(user: User) =
-        if (userService.updateProfileUser(user))
-        checkResponseStatus(
-            message = SUCCESS,
-            statusCode = HttpStatusCode.OK,
-        )
-    else
-        checkResponseStatus(
-            message = GENERIC_ERROR,
-            statusCode = HttpStatusCode.BadRequest,
-        )
+    override suspend fun updateProfileUser(user: User,userId: Int) =
+        if (userService.updateProfileUser(user,userId))
+            checkResponseStatus(
+                message = SUCCESS,
+                statusCode = HttpStatusCode.OK,
+            )
+        else
+            checkResponseStatus(
+                message = GENERIC_ERROR,
+                statusCode = HttpStatusCode.BadRequest,
+            )
 
     override suspend fun updateStatusLibraryForUser(userId: Int) = userService.updateStatusLibraryForUser(userId)
-
+    override suspend fun isTheSameImage(imageURi: String) = userService.isTheSameImage(imageURi)
+    override suspend fun updateProfileImage(imageURi: String, userId: Int) =
+        if (userService.updateProfileImage(imageURi,userId))
+            checkResponseStatus(
+                message = SUCCESS,
+                statusCode = HttpStatusCode.OK,
+            )
+        else
+            checkResponseStatus(
+                message = GENERIC_ERROR,
+                statusCode = HttpStatusCode.BadRequest,
+            )
 
 }

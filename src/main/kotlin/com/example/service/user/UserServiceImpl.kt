@@ -16,14 +16,13 @@ class UserServiceImpl : UserService {
             }.singleOrNull()
     }
 
-    override suspend fun updateProfileUser(user: User) = DatabaseFactory.dbQuery {
-        UserTable.update({ UserTable.userId eq user.userId }) {
+    override suspend fun updateProfileUser(user: User,userId: Int) = DatabaseFactory.dbQuery {
+        UserTable.update({ UserTable.userId eq userId }) {
             it[fullName] = user.fullName
             it[email] = user.email
-            it[urlPhoto] = user.urlPhoto
             it[phoneNumber] = user.phoneNumber
-            it[gander] = gander
-            it[dateOfBirth] = dateOfBirth
+            it[gander] = user.gander
+            it[dateOfBirth] = user.dateOfBirth
         }
     } > 0
 
@@ -32,5 +31,19 @@ class UserServiceImpl : UserService {
             it[doHaveLibrary] = true
         }
     } > 0
+
+    override suspend fun isTheSameImage(imageURI: String) =
+        DatabaseFactory.dbQuery {
+            UserTable.select { UserTable.imageURI.eq(imageURI) }.count() > 0
+        }
+
+    override suspend fun updateProfileImage(imageURi: String, userId: Int) =
+        DatabaseFactory.dbQuery {
+        UserTable.update({ UserTable.userId eq userId }) {
+            it[imageURI] = imageURi
+        }
+    } > 0
+
+
 
 }

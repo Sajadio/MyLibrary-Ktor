@@ -11,8 +11,9 @@ import com.example.routes.auth.login
 import com.example.routes.auth.signUp
 import com.example.routes.book.*
 import com.example.routes.library.*
-import com.example.routes.user.getUserInfo
-import com.example.routes.user.updateUserInfo
+import com.example.routes.user.getProfileUser
+import com.example.routes.user.updateProfileImage
+import com.example.routes.user.updateProfileUser
 import com.google.gson.Gson
 import io.ktor.server.routing.*
 import io.ktor.server.application.*
@@ -41,8 +42,9 @@ fun Application.configureRouting() {
 
         route("/user") {
             authenticate("auth-user") {
-                updateUserInfo(userRepo,gson)
-                getUserInfo(userRepo)
+                getProfileUser(userRepo)
+                updateProfileImage(userRepo)
+                updateProfileUser(userRepo)
                 addLibrary(libraryRepo)
                 updateLibraryInfo(libraryRepo)
                 addBook(bookRepo, libraryRepo)

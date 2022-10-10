@@ -13,3 +13,12 @@ fun PartData.FileItem.save(path: String): String {
     File("$path$fileName").writeBytes(fileBytes)
     return fileName
 }
+
+fun PartData.FileItem.saveImageProfile(path: String): String {
+    val fileBytes = streamProvider().readBytes()
+    val fileName = originalFileName.toString()
+    val folder = File(path)
+    folder.mkdirs()
+    File("$path$fileName").writeBytes(fileBytes)
+    return fileName
+}
