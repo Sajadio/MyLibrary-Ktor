@@ -7,6 +7,8 @@ import com.example.utils.ERROR
 import com.example.utils.OK
 import com.example.utils.Response
 import com.example.domain.response.UserResponse
+import com.example.routes.adminId
+import com.example.utils.INVALID_AUTHENTICATION_TOKEN
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
@@ -15,6 +17,15 @@ import io.ktor.server.routing.*
 fun Route.getProfileUser(repository: UserRepository) {
     get{
         try {
+            if (call.adminId.isEmpty()) {
+                call.respond(
+                    HttpStatusCode.Unauthorized, UserResponse(
+                        status = ERROR,
+                        message = INVALID_AUTHENTICATION_TOKEN
+                    )
+                )
+                return@get
+            }
             when (val result = repository.getUserById(call.userId.toInt())) {
                 is Response.SuccessResponse -> {
                     val user = result.data as User

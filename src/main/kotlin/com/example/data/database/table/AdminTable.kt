@@ -10,10 +10,13 @@ import java.time.LocalDateTime
 object AdminTable : Table("admins") {
     val adminId = integer("admin_id").autoIncrement()
     val fullName = varchar("full_name", 256).nullable()
-    val urlPhoto = text("path_photo").nullable()
+    val imageURI = text("image_uri").nullable()
     val email = varchar("email", 256).nullable()
     val password = text("password").nullable()
-    val phoneNumber = text("phone_number").nullable()
+    val firebaseToken = text("firebase_token").nullable()
+    val phoneNumber = text("phone_number").default("0").nullable()
+    val gander = varchar("gander", 256).nullable()
+    val dateOfBirth = varchar("date_of_birth", 256).default("00/00/0000").nullable()
     val createdAt = datetime("created_at").clientDefault { LocalDateTime.now() }
     override val primaryKey = PrimaryKey(adminId)
 }
@@ -23,7 +26,7 @@ fun ResultRow?.toAdminDto(): Admin? {
         Admin(
             adminId = this[AdminTable.adminId],
             fullName = this[AdminTable.fullName],
-            urlPhoto = "$BASE_URL${this[AdminTable.urlPhoto]}",
+            imageURL = "$BASE_URL${this[AdminTable.imageURI]}",
             email = this[AdminTable.email],
             phoneNumber = this[AdminTable.phoneNumber],
             createdAt = this[AdminTable.createdAt].toString(),

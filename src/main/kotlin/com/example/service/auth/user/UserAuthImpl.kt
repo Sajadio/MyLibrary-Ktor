@@ -16,6 +16,7 @@ class UserAuthImpl : UserAuth {
             it[fullName] = newUser.fullName
             it[email] = newUser.email
             it[password] = hashPWS(newUser.password)
+            it[firebaseToken] = newUser.firebaseToken
         }.resultedValues?.map { result ->
             result.toUserDto()
         }?.singleOrNull()

@@ -10,6 +10,6 @@ interface LibraryRepository {
     suspend fun getAllLibrary(): Response<Any>
     suspend fun deleteUserLibrary(userId:Int): Response<Any>
     suspend fun updateLibraryInfo(library: Library): Response<Any>
-    suspend fun checkIfUserHasLibrary(userId: Int, libraryId: Int): Boolean
+    suspend fun checkIfUserHasLibrary(userId: Int): Boolean
     suspend fun checkIfTheLibraryIsAccepted(userId: Int): Boolean
 }

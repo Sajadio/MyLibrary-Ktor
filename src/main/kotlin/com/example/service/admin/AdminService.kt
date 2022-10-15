@@ -6,6 +6,9 @@ import com.example.domain.request.User
 
 interface AdminService {
     suspend fun getAdminById(adminId: Int): Admin?
+    suspend fun updateAdminInfo(admin: Admin,adminId:Int): Boolean
+    suspend fun isTheSameImage(imageURI:String): Boolean
+    suspend fun updateProfileImage(imageURi:String,adminId: Int):Boolean
     suspend fun getAllUsers(): List<User?>
     suspend fun getUserById(userId: Int): User?
     suspend fun getUserByEmail(email: String): User?
@@ -14,7 +17,6 @@ interface AdminService {
     suspend fun deleteAllUsers(): Boolean
     suspend fun deleteLibraryById(libraryId: Int): Boolean
     suspend fun deleteAllLibraries(): Boolean
-    suspend fun updateAdminInfo(admin: Admin): Boolean
     suspend fun acceptLibrary(libraryId: Int):Boolean
     suspend fun rejectLibrary(libraryId: Int):Boolean
 

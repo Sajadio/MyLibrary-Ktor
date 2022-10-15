@@ -1,6 +1,7 @@
-package com.example.routes.user
+package com.example.routes.admin
 
-import com.example.domain.repository.UserRepository
+import com.example.domain.repository.AdminRepository
+import com.example.domain.response.AdminResponse
 import com.example.routes.userId
 import com.example.utils.*
 import com.example.domain.response.UserResponse
@@ -12,7 +13,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import java.io.File
 
-fun Route.updateProfileImage(repository: UserRepository) {
+fun Route.updateProfileAdminImage(repository: AdminRepository) {
     put("/update/profile/image") {
         try {
             val multipart = call.receiveMultipart()
@@ -20,18 +21,18 @@ fun Route.updateProfileImage(repository: UserRepository) {
             multipart.forEachPart { partData ->
                 when (partData) {
                     is PartData.FileItem -> {
-                        if (partData.name == "Profile_Image")
-                        fileName = partData.saveImageProfile(PROFILE_PICTURE_PATH)
+                        if (partData.name == "Profile_Image_Admin")
+                        fileName = partData.saveImageProfile(PROFILE_PICTURE_ADMIN_PATH)
                     }
                     else -> Unit
                 }
             }
-            val uri = "$PROFILE_PICTURES$fileName"
+            val uri = "$PROFILE_PICTURES_ADMIN$fileName"
             isTheSameImage(uri, repository)
             when (val result = repository.updateProfileImage(uri, call.userId.toInt())) {
                 is Response.SuccessResponse -> {
                     call.respond(
-                        result.statusCode, UserResponse(
+                        result.statusCode, AdminResponse(
                             status = OK,
                             message = result.message
                         )
@@ -39,7 +40,7 @@ fun Route.updateProfileImage(repository: UserRepository) {
                 }
 
                 is Response.ErrorResponse -> {
-                    File("$PROFILE_PICTURE_PATH/$fileName").delete()
+                    File("$PROFILE_PICTURE_ADMIN_PATH$fileName").delete()
                     call.respond(
                         result.statusCode, UserResponse(
                             status = ERROR,
@@ -50,7 +51,7 @@ fun Route.updateProfileImage(repository: UserRepository) {
             }
         } catch (e: Exception) {
             call.respond(
-                HttpStatusCode.InternalServerError, UserResponse(
+                HttpStatusCode.InternalServerError, AdminResponse(
                     status = ERROR,
                     message = e.message
                 )
@@ -59,10 +60,10 @@ fun Route.updateProfileImage(repository: UserRepository) {
     }
 }
 
-private suspend fun isTheSameImage(imageURL: String?, repository: UserRepository) {
+private suspend fun isTheSameImage(imageURL: String?, repository: AdminRepository) {
     imageURL?.let {
         if (repository.isTheSameImage(imageURL)) {
-            File("$PROFILE_PICTURE_PATH$imageURL").delete()
+            File("$PROFILE_PICTURE_ADMIN_PATH$imageURL").delete()
         }
     }
 }

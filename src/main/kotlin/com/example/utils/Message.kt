@@ -6,8 +6,6 @@ const val INVALID_AUTHENTICATION_TOKEN = "Invalid authentication token, please l
 const val GENERIC_ERROR = "Some error occurred! Please try again later"
 const val EMPTY_RESULT = "No result"
 const val LOGIN_FAILURE = "Invalid email or password"
-const val ACCEPT_LIBRARY = "Your library has been accepted"
-const val REJECT_LIBRARY = "Your library has been rejected for lack of information"
 
 
 // for user
@@ -24,6 +22,8 @@ const val ADMIN_LOGIN_SUCCESS = "Admin successfully logged in"
 const val MESSAGE_LIBRARY_NAME = "This library is not exist"
 const val MESSAGE_LIBRARY_ADDITION = "You can't add more than one library"
 const val ACCESS_LIBRARY = "You don't have access for this library"
+const val ACCEPT_LIBRARY = "Your library has been accepted"
+const val REJECT_LIBRARY = "Your library has been rejected for lack of information"
 
 // for book
 const val MESSAGE_BOOK_NAME = "This book is not exist"

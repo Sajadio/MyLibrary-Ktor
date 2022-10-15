@@ -1,11 +1,9 @@
 package com.example.routes.admin
 
+import com.example.domain.repository.*
 import com.example.domain.request.Library
 import com.example.domain.response.AdminResponse
 import com.example.domain.response.LibraryResponse
-import com.example.domain.repository.AdminRepository
-import com.example.domain.repository.LibraryRepository
-import com.example.domain.repository.UserRepository
 import com.example.routes.adminId
 import com.example.utils.ERROR
 import com.example.utils.INVALID_AUTHENTICATION_TOKEN
@@ -16,17 +14,19 @@ import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
+
 fun Route.acceptLibrary(
     adminRepo: AdminRepository,
     userRepo: UserRepository,
-    libraryRepo: LibraryRepository
+    libraryRepo: LibraryRepository,
+    notifyRepo: NotificationRepository,
 ) {
     put("library/accept") {
         try {
 
             if (call.adminId.isEmpty()) {
                 call.respond(
-                    HttpStatusCode.BadRequest, LibraryResponse(
+                    HttpStatusCode.Forbidden, LibraryResponse(
                         status = ERROR,
                         message = INVALID_AUTHENTICATION_TOKEN
                     )
@@ -38,9 +38,7 @@ fun Route.acceptLibrary(
             libraryId?.let {
                 when (val result = adminRepo.acceptLibrary(libraryId)) {
                     is Response.SuccessResponse -> {
-
                         updateStatusLibraryForUser(libraryRepo, userRepo, libraryId)
-
                         call.respond(
                             result.statusCode, LibraryResponse(
                                 status = OK,
@@ -67,7 +65,7 @@ fun Route.acceptLibrary(
 
         } catch (e: Exception) {
             call.respond(
-                HttpStatusCode.BadRequest, AdminResponse(
+                HttpStatusCode.InternalServerError, AdminResponse(
                     status = ERROR,
                     message = e.message
                 )

@@ -36,7 +36,7 @@ fun Route.addBook(repository: BookRepository, libraryRepo: LibraryRepository) {
                 return@post
             }
 
-            if (!libraryRepo.checkIfUserHasLibrary(call.userId.toInt(), request.libraryId)) {
+            if (!libraryRepo.checkIfUserHasLibrary(call.userId.toInt())) {
                 call.respond(
                     HttpStatusCode.BadRequest, BookResponse(
                         status = OK,

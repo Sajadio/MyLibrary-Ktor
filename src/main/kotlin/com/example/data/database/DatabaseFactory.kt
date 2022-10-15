@@ -1,9 +1,6 @@
 package com.example.data.database
 
-import com.example.data.database.table.AdminTable
-import com.example.data.database.table.BookTable
-import com.example.data.database.table.LibraryTable
-import com.example.data.database.table.UserTable
+import com.example.data.database.table.*
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +18,8 @@ object DatabaseFactory {
             SchemaUtils.create(AdminTable)
             SchemaUtils.create(LibraryTable)
             SchemaUtils.create(BookTable)
+            SchemaUtils.create(NotificationsTable)
+            SchemaUtils.create(NotificationUser)
         }
     }
 

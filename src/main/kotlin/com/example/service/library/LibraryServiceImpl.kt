@@ -13,7 +13,7 @@ class LibraryServiceImpl : LibraryService {
             it[userId] = library.userId
             it[libraryName] = library.libraryName
             it[libraryAddress] = library.libraryAddress
-            it[library_poster] = library.library_poster
+            it[libraryImage] = library.libraryImage
             it[libraryPhone] = library.libraryPhone
         }.insertedCount > 0
     }
@@ -50,14 +50,14 @@ class LibraryServiceImpl : LibraryService {
         }) {
             it[libraryName] = library.libraryName
             it[libraryAddress] = library.libraryAddress
-            it[library_poster] = library.library_poster
+            it[libraryImage] = library.libraryImage
             it[libraryPhone] = library.libraryPhone
         }
     } > 0
 
-    override suspend fun checkIfUserHasLibrary(userId: Int, libraryId: Int) = DatabaseFactory.dbQuery {
+    override suspend fun checkIfUserHasLibrary(userId: Int) = DatabaseFactory.dbQuery {
         LibraryTable.select {
-            LibraryTable.userId eq userId and (LibraryTable.libraryId eq libraryId)
+            LibraryTable.userId eq userId
         }.count() > 0
     }
 

@@ -9,7 +9,7 @@ interface LibraryService {
     suspend fun getLibraryByName(libraryName: String): Library?
     suspend fun deleteUserLibrary(userId: Int): Boolean
     suspend fun updateLibraryInfo(library: Library): Boolean
-    suspend fun checkIfUserHasLibrary(userId: Int, libraryId: Int): Boolean
+    suspend fun checkIfUserHasLibrary(userId: Int): Boolean
     suspend fun checkIfTheLibraryIsAccepted(userId: Int): Library?
 
 }

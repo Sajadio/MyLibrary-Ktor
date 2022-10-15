@@ -12,6 +12,28 @@ class AdminServiceImpl : AdminService {
                 result.toAdminDto()
             }.singleOrNull()
     }
+
+    override suspend fun isTheSameImage(imageURI: String) =
+        DatabaseFactory.dbQuery {
+            AdminTable.select { AdminTable.imageURI.eq(imageURI) }.count() > 0
+        }
+
+    override suspend fun updateProfileImage(imageURi: String, adminId: Int) =
+        DatabaseFactory.dbQuery {
+            AdminTable.update({ AdminTable.adminId eq adminId }) {
+                it[imageURI] = imageURi
+            }
+        } > 0
+
+    override suspend fun updateAdminInfo(admin: Admin,adminId: Int) = DatabaseFactory.dbQuery {
+        AdminTable.update({ AdminTable.adminId eq adminId }) {
+            it[fullName] = admin.fullName
+            it[email] = admin.email
+            it[phoneNumber] = admin.phoneNumber
+            it[gander] = admin.gander
+            it[dateOfBirth] = admin.dateOfBirth
+        }
+    } > 0
     override suspend fun getUserById(userId: Int) = DatabaseFactory.dbQuery {
         UserTable.select {
             UserTable.userId.eq(userId)
@@ -56,13 +78,6 @@ class AdminServiceImpl : AdminService {
     override suspend fun deleteAllLibraries() = DatabaseFactory.dbQuery {
         LibraryTable.deleteAll() > 0
     }
-    override suspend fun updateAdminInfo(admin: Admin) = DatabaseFactory.dbQuery {
-        AdminTable.update({ AdminTable.adminId eq admin.adminId }) {
-            it[fullName] = admin.fullName
-            it[email] = admin.email
-            it[phoneNumber] = admin.phoneNumber
-        }
-    } > 0
     override suspend fun acceptLibrary(libraryId: Int) =
         DatabaseFactory.dbQuery {
             LibraryTable.update({ LibraryTable.libraryId eq libraryId }) {

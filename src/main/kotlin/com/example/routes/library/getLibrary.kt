@@ -37,7 +37,7 @@ fun Route.getLibraryById(repository: LibraryRepository) {
                 }
             } ?: call.respond(
                 HttpStatusCode.BadRequest,
-                message = "The libraryId is null"
+                message = "The library Id is null"
             )
 
         } catch (e: Exception) {

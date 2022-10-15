@@ -5,6 +5,9 @@ import com.example.utils.Response
 
 interface AdminRepository {
     suspend fun getAdminById(adminId: Int): Response<Any>
+    suspend fun updateAdminInfo(admin: Admin,adminId:Int): Response<Any>
+    suspend fun isTheSameImage(imageURi:String):Boolean
+    suspend fun updateProfileImage(imageURi:String,adminId: Int): Response<Any>
     suspend fun getAllUsers(): Response<Any>
     suspend fun getUserById(userId: Int): Response<Any>
     suspend fun getUserByEmail(email: String): Response<Any>
@@ -13,7 +16,7 @@ interface AdminRepository {
     suspend fun deleteUserById(userId: Int): Response<Any>
     suspend fun deleteLibraryById(libraryId: Int): Response<Any>
     suspend fun deleteAllLibraries(): Response<Any>
-    suspend fun updateAdminInfo(admin: Admin): Response<Any>
     suspend fun acceptLibrary(libraryId: Int): Response<Any>
     suspend fun rejectLibrary(libraryId: Int): Response<Any>
+
 }

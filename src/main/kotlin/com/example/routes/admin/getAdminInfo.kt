@@ -16,7 +16,7 @@ fun Route.getAdminInfo(repository: AdminRepository) {
         try {
             if (call.adminId.isEmpty()) {
                 call.respond(
-                    HttpStatusCode.BadRequest, AdminResponse(
+                    HttpStatusCode.Unauthorized, AdminResponse(
                         status = ERROR,
                         message = INVALID_AUTHENTICATION_TOKEN
                     )

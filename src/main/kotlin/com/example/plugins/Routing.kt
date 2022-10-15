@@ -1,19 +1,15 @@
 package com.example.plugins
 
 import com.example.di.appModule
-import com.example.domain.repository.AdminRepository
-import com.example.domain.repository.AuthRepository
-import com.example.domain.repository.BookRepository
-import com.example.domain.repository.LibraryRepository
-import com.example.domain.repository.UserRepository
+import com.example.domain.repository.*
 import com.example.routes.admin.*
 import com.example.routes.auth.login
 import com.example.routes.auth.signUp
 import com.example.routes.book.*
 import com.example.routes.library.*
 import com.example.routes.user.getProfileUser
-import com.example.routes.user.updateProfileImage
-import com.example.routes.user.updateProfileUser
+import com.example.routes.user.updateProfileUserImage
+import com.example.routes.user.updateUserProfile
 import com.google.gson.Gson
 import io.ktor.server.routing.*
 import io.ktor.server.application.*
@@ -32,9 +28,11 @@ fun Application.configureRouting() {
         login(repository)
 
         val gson: Gson by inject()
+        val adminRepo by inject<AdminRepository>()
         val libraryRepo by inject<LibraryRepository>()
         val userRepo by inject<UserRepository>()
         val bookRepo by inject<BookRepository>()
+        val notifyRepo by inject<NotificationRepository>()
 
         static {
             resources("static")
@@ -43,9 +41,10 @@ fun Application.configureRouting() {
         route("/user") {
             authenticate("auth-user") {
                 getProfileUser(userRepo)
-                updateProfileImage(userRepo)
-                updateProfileUser(userRepo)
-                addLibrary(libraryRepo)
+                updateProfileUserImage(userRepo)
+                updateUserProfile(userRepo)
+                addLibrary(libraryRepo, gson)
+                getLibrariesThatAccepted(libraryRepo)
                 updateLibraryInfo(libraryRepo)
                 addBook(bookRepo, libraryRepo)
                 deleteUserLibrary(libraryRepo)
@@ -62,17 +61,17 @@ fun Application.configureRouting() {
 
         route("/admin") {
             authenticate("auth-admin") {
-                val adminRepo by inject<AdminRepository>()
                 getAdminInfo(adminRepo)
+                updateProfileAdminImage(adminRepo)
                 getAllUser(adminRepo)
                 deleteAllUser(adminRepo)
                 deleteUserById(adminRepo)
                 deleteLibraryById(adminRepo)
                 getUserByEmail(adminRepo)
-                updateAdminInfo(adminRepo, gson)
+                updateAdminInfo(adminRepo)
                 getAllLibrariesNotAccepted(adminRepo)
                 deleteAllLibraries(adminRepo)
-                acceptLibrary(adminRepo, userRepo, libraryRepo)
+                acceptLibrary(adminRepo, userRepo, libraryRepo,notifyRepo)
                 rejectLibrary(adminRepo)
             }
         }

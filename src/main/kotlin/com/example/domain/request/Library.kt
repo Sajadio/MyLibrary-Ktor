@@ -8,7 +8,7 @@ data class Library(
     val userId: Int,
     val libraryName: String?,
     val libraryAddress: String?,
-    val library_poster: String?,
+    val libraryImage: String?,
     val library_rate: Double? = null,
     val libraryPhone: String?,
     val isAccept: Boolean = false,

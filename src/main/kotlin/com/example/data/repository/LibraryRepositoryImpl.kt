@@ -79,8 +79,8 @@ class LibraryRepositoryImpl(
             statusCode = HttpStatusCode.BadRequest
         )
 
-    override suspend fun checkIfUserHasLibrary(userId: Int, libraryId: Int) =
-        libraryService.checkIfUserHasLibrary(userId, libraryId)
+    override suspend fun checkIfUserHasLibrary(userId: Int) =
+        libraryService.checkIfUserHasLibrary(userId)
 
     override suspend fun checkIfTheLibraryIsAccepted(userId: Int) =
         libraryService.checkIfTheLibraryIsAccepted(userId)?.isAccept == true

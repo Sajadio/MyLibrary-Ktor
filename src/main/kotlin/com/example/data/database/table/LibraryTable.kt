@@ -13,8 +13,8 @@ object LibraryTable : Table("library") {
     val userId = integer("user_id").references(ref = UserTable.userId, onDelete = ReferenceOption.CASCADE)
     val libraryName = varchar("library_name", 256).nullable()
     val libraryAddress = varchar("library_address", 256).nullable()
-    val library_poster = text("library_poster").nullable()
-    val library_rate = double("library_rate").nullable()
+    val libraryImage = text("library_image").nullable()
+    val library_rate = double("library_rate").nullable().default(0.0)
     val libraryPhone = text("library_phone").nullable()
     val isAccept = bool("is_accept").default(false)
     val createdAt = datetime("created_at").clientDefault { LocalDateTime.now() }
@@ -28,7 +28,7 @@ fun ResultRow?.toLibraryDto(): Library? {
             userId = this[LibraryTable.userId],
             libraryName = this[LibraryTable.libraryName],
             libraryAddress = this[LibraryTable.libraryAddress],
-            library_poster = "$BASE_URL${this[LibraryTable.library_poster]}",
+            libraryImage = "$BASE_URL${this[LibraryTable.libraryImage]}",
             library_rate = this[LibraryTable.library_rate],
             libraryPhone = this[LibraryTable.libraryPhone].toString(),
             isAccept = this[LibraryTable.isAccept],

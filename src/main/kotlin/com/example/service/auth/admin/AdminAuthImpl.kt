@@ -16,6 +16,7 @@ class AdminAuthImpl : AdminAuth {
             it[fullName] = newAdmin.fullName
             it[email] = newAdmin.email
             it[password] = hashPWS(newAdmin.password)
+            it[firebaseToken] = hashPWS(newAdmin.firebaseToken)
         }.resultedValues?.map { result ->
             result.toAdminDto()
         }?.singleOrNull()

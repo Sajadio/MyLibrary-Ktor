@@ -19,8 +19,8 @@ class AdminRepositoryImpl(
         message = MESSAGE_ADMIN_ID,
         statusCode = HttpStatusCode.NotFound
     )
-    override suspend fun updateAdminInfo(admin: Admin) =
-        adminService.updateAdminInfo(admin).takeIf { it }?.run {
+    override suspend fun updateAdminInfo(admin: Admin,adminId:Int) =
+        adminService.updateAdminInfo(admin,adminId).takeIf { it }?.run {
             checkResponseStatus(
                 SUCCESS,
                 HttpStatusCode.OK,
@@ -30,6 +30,19 @@ class AdminRepositoryImpl(
             message = GENERIC_ERROR,
             statusCode = HttpStatusCode.NotFound
         )
+
+    override suspend fun isTheSameImage(imageURi: String) = adminService.isTheSameImage(imageURi)
+    override suspend fun updateProfileImage(imageURi: String, adminId: Int) =
+        if (adminService.updateProfileImage(imageURi,adminId))
+            checkResponseStatus(
+                message = SUCCESS,
+                statusCode = HttpStatusCode.OK,
+            )
+        else
+            checkResponseStatus(
+                message = GENERIC_ERROR,
+                statusCode = HttpStatusCode.BadRequest,
+            )
     override suspend fun getAllUsers(): Response<Any> {
         val users = adminService.getAllUsers()
         return if (users.isNotEmpty()) {

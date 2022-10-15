@@ -57,14 +57,9 @@ dependencies {
     // Koin
     implementation("io.insert-koin:koin-ktor:$koin_version")
 
-
-    implementation("io.ktor:ktor-client-core:$ktor_version")
-    implementation("io.ktor:ktor-client-cio:$ktor_version")
-
-    implementation("com.transloadit.sdk:transloadit:0.4.2")
-    implementation ("org.json:json:20211205")
-
-
-
+    implementation ("com.google.code.gson:gson:2.9.0")
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.10.0")
 
 }

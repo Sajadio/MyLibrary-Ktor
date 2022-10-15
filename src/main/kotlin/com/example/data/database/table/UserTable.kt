@@ -13,6 +13,7 @@ object UserTable : Table("users") {
     val imageURI = text("image_uri").nullable()
     val email = varchar("email", 256).nullable()
     val password = text("password").nullable()
+    val firebaseToken = text("firebase_token").nullable()
     val phoneNumber = text("phone_number").default("0").nullable()
     val gander = varchar("gander", 256).nullable()
     val dateOfBirth = varchar("date_of_birth", 256).default("00/00/0000").nullable()

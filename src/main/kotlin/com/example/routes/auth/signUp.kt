@@ -127,7 +127,7 @@ fun Route.signUp(repository: AuthRepository) {
             }
         } catch (e: Exception) {
             call.respond(
-                HttpStatusCode.BadRequest, AuthResponse(
+                HttpStatusCode.InternalServerError, AuthResponse(
                     status = ERROR,
                     message = e.message,
                 )
